@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require "simplecov"
+SimpleCov.start do
+  enable_coverage :branch
+end
+
 require "gold_miner"
-require "climate_control"
 require "timecop"
 require "webmock/rspec"
 require_relative "support/timecop"

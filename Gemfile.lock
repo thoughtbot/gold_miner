@@ -12,11 +12,11 @@ GEM
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    climate_control (1.2.0)
     concurrent-ruby (1.1.10)
     crack (0.4.5)
       rexml
     diff-lcs (1.5.0)
+    docile (1.4.0)
     dotenv (2.8.1)
     dry-core (0.8.1)
       concurrent-ruby (~> 1.0)
@@ -77,6 +77,12 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    simplecov (0.21.2)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.4)
     slack-ruby-client (1.1.0)
       faraday (>= 2.0)
       faraday-mashify
@@ -101,10 +107,10 @@ PLATFORMS
   x86_64-darwin-21
 
 DEPENDENCIES
-  climate_control
   gold_miner!
   rake (~> 13.0)
   rspec (~> 3.0)
+  simplecov
   standard (~> 1.16)
   timecop
   webmock
