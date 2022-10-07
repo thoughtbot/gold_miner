@@ -6,7 +6,11 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake", "~> 13.0"
-
-gem "rspec", "~> 3.0"
-
 gem "standard", "~> 1.16"
+
+group :test do
+  gem 'climate_control'
+  gem "rspec", "~> 3.0"
+  gem "timecop"
+  gem "webmock"
+end

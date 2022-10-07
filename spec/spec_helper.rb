@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require "gold_miner"
+require "climate_control"
+require "timecop"
+require "webmock/rspec"
+require_relative "support/timecop"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
