@@ -7,7 +7,7 @@ RSpec.describe GoldMiner do
     it "loads the API token from the given env file" do
       slack_client_builder = spy("SlackClient builder")
 
-      GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env")
+      GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 
       expect(slack_client_builder).to have_received(:build).with(api_token: "test-token")
     end
@@ -17,7 +17,7 @@ RSpec.describe GoldMiner do
       slack_client = instance_double(GoldMiner::SlackClient, search_interesting_messages_in: messages)
       slack_client_builder = double(GoldMiner::SlackClient, build: Success(slack_client))
 
-      result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env")
+      result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 
       expect(result.value!).to eq messages
     end
@@ -41,12 +41,10 @@ RSpec.describe GoldMiner do
   end
 
   it "keeps env files in sync" do
-    fixture_env = Dotenv.parse("./spec/fixtures/.env")
+    fixture_env = Dotenv.parse("./spec/fixtures/.env.test")
     example_env = Dotenv.parse(".env.example")
-    env = Dotenv.parse(".env")
 
-    expect(env.keys).to match_array(example_env.keys)
-    expect(env.keys).to match_array(fixture_env.keys)
+    expect(example_env.keys).to match_array(fixture_env.keys)
   end
 
   it "has a version number" do
