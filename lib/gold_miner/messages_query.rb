@@ -21,7 +21,7 @@ module GoldMiner
     end
 
     def sent_since_last_friday
-      sent_after(last_friday)
+      sent_after(Helpers::Time.last_friday)
 
       self
     end
@@ -40,16 +40,6 @@ module GoldMiner
 
     def to_s
       [topic, channel && "in:#{channel}", start_date && "after:#{start_date}"].compact.join(" ")
-    end
-
-    private
-
-    def last_friday
-      date = Date.today
-      one_day_ago = (date - 1)
-      one_week_ago = date - 7
-
-      one_day_ago.downto(one_week_ago).find { |date| date.friday? }.strftime("%Y-%m-%d")
     end
   end
 end
