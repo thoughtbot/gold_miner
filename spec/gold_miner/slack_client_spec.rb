@@ -17,9 +17,9 @@ RSpec.describe GoldMiner::SlackClient do
       stub_slack_auth_test_request(token: token, body: {"ok" => false, "error" => "invalid_auth"})
 
       result = GoldMiner::SlackClient.build(api_token: token)
-      error_message = result.failure.message
+      error_message = result.failure
 
-      expect(error_message).to eq "invalid_auth"
+      expect(error_message).to eq "Authentication failed. Please check your API token."
     end
   end
 
