@@ -28,19 +28,16 @@ module GoldMiner
     end
 
     def search_interesting_messages_in(channel)
-      til_message_results = @slack.search_messages(query: interesting_messages_query(channel).til_messages)
-      tip_message_results = @slack.search_messages(query: interesting_messages_query(channel).tip_messages)
-      messages = (til_message_results.messages.matches + tip_message_results.messages.matches).uniq { |msg| msg.iid }
-      warn_on_multiple_pages(til_message_results, tip_message_results)
+      til_messages = extract_messages_from_result(
+        @slack.search_messages(query: interesting_messages_query(channel).til_messages),
+        topic: :til
+      )
+      tip_messages = extract_messages_from_result(
+        @slack.search_messages(query: interesting_messages_query(channel).tip_messages),
+        topic: :tip
+      )
 
-      # TODO: messages might have a `files[0].preview` with code snippets
-      messages.map { |match|
-        {
-          text: match.text,
-          author_username: match.username,
-          permalink: match.permalink
-        }
-      }
+      (til_messages + tip_messages).uniq { |message| message[:permalink] }
     end
 
     private_class_method :new
@@ -54,12 +51,23 @@ module GoldMiner
         .sent_since_last_friday
     end
 
+    def extract_messages_from_result(result, topic:)
+      warn_on_multiple_pages(result)
+
+      result.messages.matches.map do |match|
+        {
+          text: match.text,
+          author_username: match.username,
+          permalink: match.permalink,
+          topic: topic
+        }
+      end
+    end
+
     # For simplicity, I'm not handling API pagination yet
-    def warn_on_multiple_pages(*results)
-      results.each do |result|
-        if result.messages.paging.pages > 1
-          warn "[WARNING] Found more than one page of results, only the first page will be processed"
-        end
+    def warn_on_multiple_pages(result)
+      if result.messages.paging.pages > 1
+        warn "[WARNING] Found more than one page of results, only the first page will be processed"
       end
     end
   end

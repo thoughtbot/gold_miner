@@ -34,8 +34,8 @@ RSpec.describe GoldMiner::SlackClient do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"iid" => "1", "text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
-                {"iid" => "2", "text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -47,8 +47,8 @@ RSpec.describe GoldMiner::SlackClient do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"iid" => "2", "text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
-                {"iid" => "3", "text" => "Ruby tip: have fun!", "username" => "user2", "permalink" => "https:///message-3-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "Ruby tip: have fun!", "username" => "user2", "permalink" => "https:///message-3-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -59,9 +59,9 @@ RSpec.describe GoldMiner::SlackClient do
         messages = slack.search_interesting_messages_in("dev")
 
         expect(messages).to match_array [
-          {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com"},
-          {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com"},
-          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com"},
+          {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com", topic: :til},
+          {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com", topic: :til},
+          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com", topic: :tip}
         ]
       end
     end
@@ -76,8 +76,8 @@ RSpec.describe GoldMiner::SlackClient do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"iid" => "1", "text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
-                {"iid" => "2", "text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"}
+                {"text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 2}
             }
