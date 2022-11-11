@@ -1,33 +1,68 @@
-# GoldMiner
+# ⛏ GoldMiner
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/gold_miner`. To experiment with that code, run `bin/console` for an interactive prompt.
+GoldMiner is a tool for finding interesting\* messages in a Slack channel and
+turning that into a blog post for the [thoughtbot blog].
 
-TODO: Delete this and the text above, and describe your gem
+It uses the Slack API to search for messages in a channel, then it groups and
+formats them into a markdown blog post.
+
+_\* At this point, "interesting" means "messages that contain a 'TIL' or 'tip'".
+This is likely to change in the future._
+
+[thoughtbot blog]: https://github.com/thoughtbot/robots.thoughtbot.com
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+First, clone the repo:
 
-    $ bundle add gold-miner
+```sh
+git clone git@github.com:thoughtbot/gold_miner.git
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Then, run the setup script:
 
-    $ gem install gold-miner
+```sh
+bin/setup
+```
+
+You'll need a Slack API token. You can get it [on 1Password] (search for "Slack
+API Token"). If that doesn't work, ask [someone on the team] for help.
+
+[on 1password]: https://start.1password.com/signin
+[someone on the team]: https://thoughtbot.slack.com/apps/A040W2T48BF-gold-miner?tab=more_info
 
 ## Usage
 
-TODO: Write usage instructions here
+To generate a blog post, run the following command:
+
+```sh
+exe/gold_miner
+```
+
+GoldMiner will search on the #dev channel by default. You can also specify a
+different channel:
+
+```sh
+# Search on the #design channel
+exe/gold_miner design
+```
+
+This will output a markdown article. Use that as a basis for opening a [new blog
+post PR].
+
+> **Note**
+> In the future, GoldMiner [will open] a PR for you.
+
+[new blog post pr]: https://vellum.thoughtbot.com/articles/new
+[will open]: https://github.com/thoughtbot/gold_miner/issues/1
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`rake spec` to run the tests. You can also run `bin/console` for an interactive
+prompt that will allow you to experiment.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/gold-miner.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/thoughtbot/gold-miner.
