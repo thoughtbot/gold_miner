@@ -3,13 +3,15 @@
 GoldMiner is a tool for finding interesting\* messages in a Slack channel and
 turning that into a blog post for the [thoughtbot blog].
 
-It uses the Slack API to search for messages in a channel, then it groups and
-formats them into a markdown blog post.
+It uses the Slack API to [search for messages in a channel], then it groups and
+[formats them into a markdown blog post].
 
 _\* At this point, "interesting" means "messages that contain a 'TIL' or 'tip'".
 This is likely to change in the future._
 
 [thoughtbot blog]: https://github.com/thoughtbot/robots.thoughtbot.com
+[search for messages in a channel]: https://github.com/thoughtbot/gold_miner/blob/main/lib/gold_miner/slack_client.rb#L30
+[formats them into a markdown blog post]: https://github.com/thoughtbot/gold_miner/blob/main/lib/gold_miner/blog_post.rb#L14
 
 ## Installation
 
