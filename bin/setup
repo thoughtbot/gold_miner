@@ -1,10 +1,97 @@
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
-set -vx
+#!/usr/bin/env ruby
+require "fileutils"
 
-bundle install
+def red(message)
+  "\e[31m#{message}\e[0m"
+end
 
-# Do any other automated setup that you need to do here
+def green(message)
+  "\e[32m#{message}\e[0m"
+end
 
-cp .env.example .env
+def bold(message)
+  "\e[1m#{message}\e[0m"
+end
+
+def italic(message)
+  "\e[3m#{message}\e[0m"
+end
+
+def gray(message)
+  "\e[90m#{message}\e[0m"
+end
+
+def link_to(message, url)
+  "\e]8;;#{url}\a#{message}\e]8;;\a"
+end
+
+def hint_msg(message)
+  italic gray "Hint: #{message}".chomp
+end
+
+def exit_with_error(message, hint: nil)
+  full_message = red("❌ #{message}")
+
+  if hint
+    full_message += "\n#{hint_msg hint}"
+  end
+
+  abort full_message
+end
+
+def system!(*args)
+  system(*args) || exit_with_error("❌ Command '#{args.join}' failed")
+end
+
+def log(message)
+  puts bold green "⛏ #{message}"
+end
+
+def has_slack_api_token?(env)
+  env.match?(/SLACK_API_TOKEN=.+/) && !env.include?("example-token")
+end
+
+# Steps
+
+def install_dependencies
+  log "Installing dependencies"
+
+  system! "gem install bundler --conservative"
+  system("bundle check") || system!("bundle install")
+end
+
+def create_env_file
+  log "Creating .env file"
+
+  if File.exist?(".env")
+    puts "Skipping, .env already exists"
+    return
+  end
+
+  FileUtils.cp(".env.example", ".env")
+end
+
+def check_for_slack_api_token
+  log "Checking for Slack API token"
+
+  env = File.read(".env")
+  if has_slack_api_token?(env)
+    puts "Found Slack API token"
+  else
+    exit_with_error "No Slack API token found, please add one to .env", hint: <<~HINT
+      You can find a Slack API token at #{link_to("1Password", "https://start.1password.com/signin")}.
+    HINT
+  end
+end
+
+def done
+  log "Done! 🎉"
+  puts "You're set. Run #{bold "exe/gold_miner"} to create a new blog post."
+end
+
+# Main script
+
+create_env_file
+install_dependencies
+check_for_slack_api_token
+done
