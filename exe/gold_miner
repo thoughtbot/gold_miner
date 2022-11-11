@@ -14,5 +14,4 @@ channel = ARGV.first || "dev"
 GoldMiner
   .mine_in(channel)
   .fmap { |messages| puts GoldMiner.convert_messages_to_blogpost(channel, messages) }
-  .fmap { |blogpost| GoldMiner.open_blogpost_pull_request(blogpost) }
   .or { |error| exit_with_error "[ERROR] #{error}" }
