@@ -12,6 +12,16 @@ RSpec.describe GoldMiner::SlackClient do
       expect(result.value!).to be_a GoldMiner::SlackClient
     end
 
+    it "returns a failure monad if api_token is nil" do
+      token = nil
+      stub_slack_auth_test_request(token: token, body: {"ok" => false, "error" => "not_authed"})
+
+      result = GoldMiner::SlackClient.build(api_token: token)
+      error_message = result.failure
+
+      expect(error_message).to eq "Authentication failed. Please check your API token."
+    end
+
     it "returns a failure monad if api_token is invalid" do
       token = "invalid-token"
       stub_slack_auth_test_request(token: token, body: {"ok" => false, "error" => "invalid_auth"})
@@ -108,10 +118,10 @@ RSpec.describe GoldMiner::SlackClient do
     headers = {
       "Accept" => "application/json; charset=utf-8",
       "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-      "Authorization" => "Bearer #{token}",
       "Content-Length" => "0",
       "User-Agent" => "Slack Ruby Client/1.1.0"
     }
+    headers["Authorization"] = "Bearer #{token}" if token
 
     stub_request(:post, "https://slack.com/api/auth.test")
       .with(headers: headers)

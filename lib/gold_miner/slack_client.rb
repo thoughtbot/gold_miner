@@ -14,7 +14,7 @@ module GoldMiner
         client.auth_test
 
         Success(client)
-      rescue Slack::Web::Api::Errors::InvalidAuth
+      rescue Slack::Web::Api::Errors::InvalidAuth, Slack::Web::Api::Errors::NotAuthed
         Failure("Authentication failed. Please check your API token.")
       end
     end
