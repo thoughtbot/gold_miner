@@ -4,14 +4,9 @@ $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require "gold_miner"
 
-def exit_with_error(message)
-  warn message
-  exit 1
-end
-
 channel = ARGV.first || "dev"
 
 GoldMiner
   .mine_in(channel)
   .fmap { |messages| puts GoldMiner.convert_messages_to_blogpost(channel, messages) }
-  .or { |error| exit_with_error "[ERROR] #{error}" }
+  .or { |error| abort "[ERROR] #{error}" }
