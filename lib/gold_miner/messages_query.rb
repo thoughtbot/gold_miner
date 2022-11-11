@@ -20,7 +20,7 @@ module GoldMiner
       self
     end
 
-    def sent_since_last_friday
+    def sent_after_last_friday
       sent_after(Helpers::Time.last_friday)
 
       self

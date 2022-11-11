@@ -48,7 +48,7 @@ module GoldMiner
       MessagesQuery
         .new
         .on_channel(channel)
-        .sent_since_last_friday
+        .sent_after_last_friday
     end
 
     def extract_messages_from_result(result, topic:)

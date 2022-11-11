@@ -47,7 +47,7 @@ RSpec.describe GoldMiner::MessagesQuery do
     end
   end
 
-  describe "#sent_since_last_friday" do
+  describe "#sent_after_last_friday" do
     it "sets the start date to the last Friday", :aggregate_failures do
       a_thursday = "2022-10-06"
       a_friday = "2022-10-07"
@@ -56,7 +56,7 @@ RSpec.describe GoldMiner::MessagesQuery do
       travel_to a_thursday do
         query = GoldMiner::MessagesQuery.new
 
-        result = query.sent_since_last_friday
+        result = query.sent_after_last_friday
 
         expect(query.start_date).to eq("2022-09-30")
         expect(result).to eq(query)
@@ -65,7 +65,7 @@ RSpec.describe GoldMiner::MessagesQuery do
       travel_to a_friday do
         query = GoldMiner::MessagesQuery.new
 
-        result = query.sent_since_last_friday
+        result = query.sent_after_last_friday
 
         expect(query.start_date).to eq("2022-09-30") # a week before, not today
         expect(result).to eq(query)
@@ -74,7 +74,7 @@ RSpec.describe GoldMiner::MessagesQuery do
       travel_to a_saturday do
         query = GoldMiner::MessagesQuery.new
 
-        result = query.sent_since_last_friday
+        result = query.sent_after_last_friday
 
         expect(query.start_date).to eq("2022-10-07") # the day before
         expect(result).to eq(query)
