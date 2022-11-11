@@ -17,7 +17,7 @@ module GoldMiner
         title: "#{title}"
         tags: #{tags}
         teaser: >
-          Highlights of what happened in our #dev channel on Slack this week.
+          Highlights of what happened in our ##{@slack_channel} channel on Slack this week.
         author: Matheus Richard
         ---
 
@@ -34,11 +34,14 @@ module GoldMiner
     end
 
     def tags
-      ["this-week-in-dev"].join(", ")
+      [
+        "this-week-in-#{@slack_channel}",
+        *topics
+      ].join(", ")
     end
 
     def highlights
-      topics
+      messages_by_topic
         .map { |topic, messages|
           <<~MARKDOWN
             ## #{format_topic(topic)}
@@ -65,8 +68,12 @@ module GoldMiner
       "(#{start_date} - #{end_date})"
     end
 
-    def topics
+    def messages_by_topic
       @messages.group_by { |message| message[:topic] }
+    end
+
+    def topics
+      @messages.map { |message| message[:topic] }.uniq
     end
 
     def authors
