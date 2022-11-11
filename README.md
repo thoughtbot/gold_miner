@@ -34,6 +34,9 @@ API Token"). If that doesn't work, ask [someone on the team] for help.
 [on 1password]: https://start.1password.com/signin
 [someone on the team]: https://thoughtbot.slack.com/apps/A040W2T48BF-gold-miner?tab=more_info
 
+After setting the token on the .env file, rerun the setup script to finish the
+installation.
+
 ## Usage
 
 To generate a blog post, run the following command:
