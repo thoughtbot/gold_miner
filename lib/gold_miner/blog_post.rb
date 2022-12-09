@@ -72,6 +72,7 @@ module GoldMiner
       @messages
         .map { |message| "@#{message[:author_username]}" }
         .uniq
+        .sort
         .then { |author_usernames| Helpers::Sentence.from(author_usernames) }
     end
   end
