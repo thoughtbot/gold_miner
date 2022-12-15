@@ -24,17 +24,15 @@ RSpec.describe GoldMiner::BlogPost do
           author: Matheus Richard
           ---
 
-          ## Highlights
-
-          ### http://permalink-1.com
+          ## http://permalink-1.com
 
           TIL 1
 
-          ### http://permalink-2.com
+          ## http://permalink-2.com
 
           TIL 2
 
-          ### http://permalink-3.com
+          ## http://permalink-3.com
 
           Tip 1
 

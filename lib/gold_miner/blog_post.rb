@@ -41,17 +41,12 @@ module GoldMiner
     end
 
     def highlights
-      <<~MARKDOWN
-        ## Highlights
-
-        #{@messages.map { |message| highlight_from(message) }.join("\n")}
-      MARKDOWN
-        .chomp("")
+      @messages.map { |message| highlight_from(message) }.join("\n").chomp("")
     end
 
     def highlight_from(message)
       <<~MARKDOWN
-        ### #{message[:permalink]}
+        ## #{message[:permalink]}
 
         #{message[:text]}
       MARKDOWN
