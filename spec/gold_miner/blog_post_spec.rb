@@ -17,7 +17,7 @@ RSpec.describe GoldMiner::BlogPost do
 
         expect(result).to eq <<~MARKDOWN
           ---
-          title: "This week in #design (2022-09-30 - 2022-10-07)"
+          title: "This week in #design (Sep 30, 2022)"
           tags: this-week-in-design, til, tip
           teaser: >
             Highlights of what happened in our #design channel on Slack this week.

@@ -56,10 +56,9 @@ module GoldMiner
     end
 
     def time_period
-      start_date = @since
-      end_date = Helpers::Time.as_yyyy_mm_dd(Date.today)
+      start_date = Helpers::Time.pretty_date(Date.parse(@since))
 
-      "(#{start_date} - #{end_date})"
+      "(#{start_date})"
     end
 
     def topics

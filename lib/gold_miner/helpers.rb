@@ -1,8 +1,8 @@
 module GoldMiner
   module Helpers
     module Time
-      def self.as_yyyy_mm_dd(date)
-        date.strftime("%Y-%m-%d")
+      def self.pretty_date(date)
+        date.strftime("%b %-d, %Y")
       end
 
       def self.last_friday
@@ -11,7 +11,7 @@ module GoldMiner
         one_week_ago = date - 7
         friday = one_day_ago.downto(one_week_ago).find { |date| date.friday? }
 
-        as_yyyy_mm_dd(friday)
+        friday.to_s
       end
     end
 
