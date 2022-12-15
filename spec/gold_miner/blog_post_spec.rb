@@ -24,6 +24,9 @@ RSpec.describe GoldMiner::BlogPost do
           author: Matheus Richard
           ---
 
+          Welcome to another edition of This Week in #dev, a series of posts where we
+          bring some of the most interesting Slack conversations to the public.
+
           ## http://permalink-1.com
 
           TIL 1

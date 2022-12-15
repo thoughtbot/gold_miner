@@ -21,6 +21,9 @@ module GoldMiner
         author: Matheus Richard
         ---
 
+        Welcome to another edition of This Week in #dev, a series of posts where we
+        bring some of the most interesting Slack conversations to the public.
+
         #{highlights}
 
         ## Thanks
