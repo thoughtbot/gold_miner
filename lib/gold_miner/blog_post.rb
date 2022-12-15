@@ -41,21 +41,12 @@ module GoldMiner
     end
 
     def highlights
-      messages_by_topic
-        .map { |topic, messages|
-          <<~MARKDOWN
-            ## #{format_topic(topic)}
-
-            #{messages.map { |message| highlight_from(message) }.join("\n")}
-          MARKDOWN
-        }
-        .join
-        .chomp("")
+      @messages.map { |message| highlight_from(message) }.join("\n").chomp("")
     end
 
     def highlight_from(message)
       <<~MARKDOWN
-        ### [@#{message[:author_username]}](#{message[:permalink]})
+        ## #{message[:permalink]}
 
         #{message[:text]}
       MARKDOWN
@@ -68,10 +59,6 @@ module GoldMiner
       "(#{start_date} - #{end_date})"
     end
 
-    def messages_by_topic
-      @messages.group_by { |message| message[:topic] }
-    end
-
     def topics
       @messages.map { |message| message[:topic] }.uniq
     end
@@ -80,20 +67,8 @@ module GoldMiner
       @messages
         .map { |message| "@#{message[:author_username]}" }
         .uniq
+        .sort
         .then { |author_usernames| Helpers::Sentence.from(author_usernames) }
-    end
-
-    private
-
-    def format_topic(topic)
-      case topic
-      when :til
-        "TILs"
-      when :tip
-        "Tips"
-      else
-        raise "Unknown topic: #{topic.inspect}"
-      end
     end
   end
 end

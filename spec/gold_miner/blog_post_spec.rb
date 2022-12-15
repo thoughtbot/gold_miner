@@ -7,8 +7,8 @@ RSpec.describe GoldMiner::BlogPost do
     it "creates a blogpost from a list of messages" do
       travel_to "2022-10-07" do
         messages = [
-          {text: "TIL 1", author_username: "user1", permalink: "http://permalink-1.com", topic: :til},
-          {text: "TIL 2", author_username: "user2", permalink: "http://permalink-2.com", topic: :til},
+          {text: "TIL 1", author_username: "user2", permalink: "http://permalink-1.com", topic: :til},
+          {text: "TIL 2", author_username: "user1", permalink: "http://permalink-2.com", topic: :til},
           {text: "Tip 1", author_username: "user2", permalink: "http://permalink-3.com", topic: :tip}
         ]
         blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: messages, since: "2022-09-30")
@@ -24,19 +24,15 @@ RSpec.describe GoldMiner::BlogPost do
           author: Matheus Richard
           ---
 
-          ## TILs
-
-          ### [@user1](http://permalink-1.com)
+          ## http://permalink-1.com
 
           TIL 1
 
-          ### [@user2](http://permalink-2.com)
+          ## http://permalink-2.com
 
           TIL 2
 
-          ## Tips
-
-          ### [@user2](http://permalink-3.com)
+          ## http://permalink-3.com
 
           Tip 1
 
@@ -45,13 +41,6 @@ RSpec.describe GoldMiner::BlogPost do
           This edition was brought to you by: @user1 and @user2. Thanks to all contributors! 🎉
         MARKDOWN
       end
-    end
-
-    it "raises on a unknown topic" do
-      messages = [{text: "Tip 1", author_username: "user2", permalink: "http://permalink-3.com", topic: :unknown}]
-      blogpost = GoldMiner::BlogPost.new(slack_channel: "dev", messages: messages, since: "2022-09-30")
-
-      expect { blogpost.to_s }.to raise_error(RuntimeError, "Unknown topic: :unknown")
     end
   end
 end
