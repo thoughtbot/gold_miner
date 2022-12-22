@@ -5,6 +5,8 @@ require "slack-ruby-client"
 
 module GoldMiner
   class SlackClient
+    GOLD_EMOJI = "rupee-gold"
+
     extend Dry::Monads[:result]
 
     def self.build(api_token:)
@@ -29,15 +31,19 @@ module GoldMiner
 
     def search_interesting_messages_in(channel)
       til_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages_query(channel).til_messages),
+        @slack.search_messages(query: interesting_messages_query(channel).with_topic("TIL")),
         topic: :til
       )
       tip_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages_query(channel).tip_messages),
+        @slack.search_messages(query: interesting_messages_query(channel).with_topic("tip")),
         topic: :tip
       )
+      golden_messages = extract_messages_from_result(
+        @slack.search_messages(query: interesting_messages_query(channel).with_reaction(GOLD_EMOJI)),
+        topic: nil
+      )
 
-      (til_messages + tip_messages).uniq { |message| message[:permalink] }
+      (til_messages + tip_messages + golden_messages).uniq { |message| message[:permalink] }
     end
 
     private_class_method :new

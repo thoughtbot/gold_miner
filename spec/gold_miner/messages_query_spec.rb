@@ -25,24 +25,24 @@ RSpec.describe GoldMiner::MessagesQuery do
     end
   end
 
-  describe "#til_messages" do
-    it "sets the query topic to TIL messages" do
+  describe "#with_reaction" do
+    it "sets the query reaction to search messages" do
       query = GoldMiner::MessagesQuery.new
 
-      result = query.til_messages
+      result = query.with_reaction("thumbsup")
 
-      expect(query.topic).to eq("TIL")
+      expect(query.reaction).to eq("thumbsup")
       expect(result).to eq(query)
     end
   end
 
-  describe "#tip_messages" do
-    it "sets the query topic to tip messages" do
+  describe "#with_topic" do
+    it "sets the query topic to TIL messages" do
       query = GoldMiner::MessagesQuery.new
 
-      result = query.tip_messages
+      result = query.with_topic("TIL")
 
-      expect(query.topic).to eq("tip")
+      expect(query.topic).to eq("TIL")
       expect(result).to eq(query)
     end
   end
@@ -87,12 +87,13 @@ RSpec.describe GoldMiner::MessagesQuery do
       query = GoldMiner::MessagesQuery.new
 
       result = query
-        .til_messages
+        .with_topic("TIL")
         .sent_after("2022-10-07")
         .on_channel("dev")
+        .with_reaction("thumbsup")
         .to_s
 
-      expect(result).to eq("TIL in:dev after:2022-10-07")
+      expect(result).to eq("TIL in:dev after:2022-10-07 has::thumbsup:")
     end
 
     it "does not include unset options" do

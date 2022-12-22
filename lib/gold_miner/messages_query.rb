@@ -1,11 +1,12 @@
 module GoldMiner
   class MessagesQuery
-    attr_reader :channel, :start_date, :topic
+    attr_reader :channel, :start_date, :topic, :reaction
 
     def initialize
       @channel = nil
       @start_date = nil
       @topic = nil
+      @reaction = nil
     end
 
     def on_channel(channel)
@@ -26,20 +27,25 @@ module GoldMiner
       self
     end
 
-    def til_messages
-      @topic = "TIL"
+    def with_topic(topic)
+      @topic = topic
 
       self
     end
 
-    def tip_messages
-      @topic = "tip"
+    def with_reaction(reaction)
+      @reaction = reaction
 
       self
     end
 
     def to_s
-      [topic, channel && "in:#{channel}", start_date && "after:#{start_date}"].compact.join(" ")
+      [
+        topic,
+        channel && "in:#{channel}",
+        start_date && "after:#{start_date}",
+        reaction && "has::#{reaction}:"
+      ].compact.join(" ")
     end
   end
 end

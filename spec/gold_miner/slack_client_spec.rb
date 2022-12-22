@@ -64,6 +64,19 @@ RSpec.describe GoldMiner::SlackClient do
             }
           }
         )
+        stub_slack_message_search_request(
+          query: "in:dev after:2022-09-30 has::rupee-gold:",
+          body: {
+            "ok" => true,
+            "messages" => {
+              "matches" => [
+                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "CSS clamp() is so cool!", "username" => "user3", "permalink" => "https:///message-4-permalink.com"}
+              ],
+              "paging" => {"pages" => 1}
+            }
+          }
+        )
         slack = GoldMiner::SlackClient.build(api_token: token).value!
 
         messages = slack.search_interesting_messages_in("dev")
@@ -71,7 +84,8 @@ RSpec.describe GoldMiner::SlackClient do
         expect(messages).to match_array [
           {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com", topic: :til},
           {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com", topic: :til},
-          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com", topic: :tip}
+          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com", topic: :tip},
+          {text: "CSS clamp() is so cool!", author_username: "user3", permalink: "https:///message-4-permalink.com", topic: nil}
         ]
       end
     end
@@ -95,6 +109,16 @@ RSpec.describe GoldMiner::SlackClient do
         )
         stub_slack_message_search_request(
           query: "tip in:dev after:2022-09-30",
+          body: {
+            "ok" => true,
+            "messages" => {
+              "matches" => [],
+              "paging" => {"pages" => 1}
+            }
+          }
+        )
+        stub_slack_message_search_request(
+          query: "in:dev after:2022-09-30 has::rupee-gold:",
           body: {
             "ok" => true,
             "messages" => {
