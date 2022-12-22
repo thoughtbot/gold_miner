@@ -29,11 +29,11 @@ module GoldMiner
 
     def search_interesting_messages_in(channel)
       til_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages_query(channel).til_messages),
+        @slack.search_messages(query: interesting_messages_query(channel).with_topic("TIL")),
         topic: :til
       )
       tip_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages_query(channel).tip_messages),
+        @slack.search_messages(query: interesting_messages_query(channel).with_topic("tip")),
         topic: :tip
       )
 

@@ -26,14 +26,8 @@ module GoldMiner
       self
     end
 
-    def til_messages
-      @topic = "TIL"
-
-      self
-    end
-
-    def tip_messages
-      @topic = "tip"
+    def with_topic(topic)
+      @topic = topic
 
       self
     end

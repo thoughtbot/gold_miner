@@ -25,24 +25,13 @@ RSpec.describe GoldMiner::MessagesQuery do
     end
   end
 
-  describe "#til_messages" do
+  describe "#with_topic" do
     it "sets the query topic to TIL messages" do
       query = GoldMiner::MessagesQuery.new
 
-      result = query.til_messages
+      result = query.with_topic("TIL")
 
       expect(query.topic).to eq("TIL")
-      expect(result).to eq(query)
-    end
-  end
-
-  describe "#tip_messages" do
-    it "sets the query topic to tip messages" do
-      query = GoldMiner::MessagesQuery.new
-
-      result = query.tip_messages
-
-      expect(query.topic).to eq("tip")
       expect(result).to eq(query)
     end
   end
@@ -87,7 +76,7 @@ RSpec.describe GoldMiner::MessagesQuery do
       query = GoldMiner::MessagesQuery.new
 
       result = query
-        .til_messages
+        .with_topic("TIL")
         .sent_after("2022-10-07")
         .on_channel("dev")
         .to_s
