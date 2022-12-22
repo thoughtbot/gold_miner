@@ -2,41 +2,37 @@ module GoldMiner
   class MessagesQuery
     attr_reader :channel, :start_date, :topic, :reaction
 
-    def initialize
-      @channel = nil
-      @start_date = nil
-      @topic = nil
-      @reaction = nil
-    end
-
-    def on_channel(channel)
+    def initialize(channel: nil, start_date: nil, topic: nil, reaction: nil)
       @channel = channel
-
-      self
+      @start_date = start_date
+      @topic = topic
+      @reaction = reaction
     end
 
-    def sent_after(start_date)
-      @start_date = start_date
+    def on_channel(new_channel)
+      with(channel: new_channel)
+    end
 
-      self
+    def sent_after(new_start_date)
+      with(start_date: new_start_date)
     end
 
     def sent_after_last_friday
       sent_after(Helpers::Time.last_friday)
-
-      self
     end
 
-    def with_topic(topic)
-      @topic = topic
-
-      self
+    def with_topic(new_topic)
+      with(topic: new_topic)
     end
 
-    def with_reaction(reaction)
-      @reaction = reaction
+    def with_reaction(new_reaction)
+      with(reaction: new_reaction)
+    end
 
-      self
+    def with(**new_attributes)
+      old_attributes = {channel: channel, start_date: start_date, topic: topic, reaction: reaction}
+
+      self.class.new(**old_attributes.merge(new_attributes))
     end
 
     def to_s

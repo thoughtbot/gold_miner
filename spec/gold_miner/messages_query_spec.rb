@@ -9,8 +9,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
       result = query.on_channel("dev")
 
-      expect(query.channel).to eq("dev")
-      expect(result).to eq(query)
+      expect(result.channel).to eq("dev")
     end
   end
 
@@ -20,8 +19,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
       result = query.sent_after("2018-01-01")
 
-      expect(query.start_date).to eq("2018-01-01")
-      expect(result).to eq(query)
+      expect(result.start_date).to eq("2018-01-01")
     end
   end
 
@@ -31,8 +29,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
       result = query.with_reaction("thumbsup")
 
-      expect(query.reaction).to eq("thumbsup")
-      expect(result).to eq(query)
+      expect(result.reaction).to eq("thumbsup")
     end
   end
 
@@ -42,8 +39,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
       result = query.with_topic("TIL")
 
-      expect(query.topic).to eq("TIL")
-      expect(result).to eq(query)
+      expect(result.topic).to eq("TIL")
     end
   end
 
@@ -58,8 +54,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
         result = query.sent_after_last_friday
 
-        expect(query.start_date).to eq("2022-09-30")
-        expect(result).to eq(query)
+        expect(result.start_date).to eq("2022-09-30")
       end
 
       travel_to a_friday do
@@ -67,8 +62,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
         result = query.sent_after_last_friday
 
-        expect(query.start_date).to eq("2022-09-30") # a week before, not today
-        expect(result).to eq(query)
+        expect(result.start_date).to eq("2022-09-30") # a week before, not today
       end
 
       travel_to a_saturday do
@@ -76,8 +70,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
         result = query.sent_after_last_friday
 
-        expect(query.start_date).to eq("2022-10-07") # the day before
-        expect(result).to eq(query)
+        expect(result.start_date).to eq("2022-10-07") # the day before
       end
     end
   end
