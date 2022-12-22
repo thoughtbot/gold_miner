@@ -39,7 +39,7 @@ module GoldMiner
     def tags
       [
         "this-week-in-#{@slack_channel}",
-        *topics
+        *topic_tags
       ].join(", ")
     end
 
@@ -61,8 +61,16 @@ module GoldMiner
       "(#{start_date})"
     end
 
+    def topic_tags
+      topics.map(&:downcase)
+    end
+
     def topics
-      @messages.map { |message| message[:topic] }.uniq
+      @topics ||= @messages.flat_map { |message| topics_from(message) }.uniq
+    end
+
+    def topics_from(message)
+      GoldMiner::TopicExtractor.call(message[:text])
     end
 
     def authors
