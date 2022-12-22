@@ -5,6 +5,7 @@ require_relative "gold_miner/blog_post"
 require_relative "gold_miner/helpers"
 require_relative "gold_miner/messages_query"
 require_relative "gold_miner/slack_client"
+require_relative "gold_miner/topic_extractor"
 require_relative "gold_miner/version"
 
 module GoldMiner
