@@ -32,16 +32,13 @@ module GoldMiner
     def search_interesting_messages_in(channel)
       interesting_messages = interesting_messages_query(channel)
       til_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_topic("TIL")),
-        topic: :til
+        @slack.search_messages(query: interesting_messages.with_topic("TIL"))
       )
       tip_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_topic("tip")),
-        topic: :tip
+        @slack.search_messages(query: interesting_messages.with_topic("tip"))
       )
       golden_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_reaction(GOLD_EMOJI)),
-        topic: nil
+        @slack.search_messages(query: interesting_messages.with_reaction(GOLD_EMOJI))
       )
 
       (til_messages + tip_messages + golden_messages).uniq { |message| message[:permalink] }
@@ -58,7 +55,7 @@ module GoldMiner
         .sent_after_last_friday
     end
 
-    def extract_messages_from_result(result, topic:)
+    def extract_messages_from_result(result)
       warn_on_multiple_pages(result)
 
       result.messages.matches.map do |match|
@@ -66,7 +63,6 @@ module GoldMiner
           text: match.text,
           author_username: match.username,
           permalink: match.permalink,
-          topic: topic
         }
       end
     end

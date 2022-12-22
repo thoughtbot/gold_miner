@@ -82,10 +82,10 @@ RSpec.describe GoldMiner::SlackClient do
         messages = slack.search_interesting_messages_in("dev")
 
         expect(messages).to match_array [
-          {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com", topic: :til},
-          {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com", topic: :til},
-          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com", topic: :tip},
-          {text: "CSS clamp() is so cool!", author_username: "user3", permalink: "https:///message-4-permalink.com", topic: nil}
+          {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com"},
+          {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com"},
+          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com"},
+          {text: "CSS clamp() is so cool!", author_username: "user3", permalink: "https:///message-4-permalink.com"}
         ]
       end
     end
