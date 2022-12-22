@@ -26,6 +26,7 @@ RSpec.describe GoldMiner::BlogPost do
 
           Welcome to another edition of This Week in #dev, a series of posts where we
           bring some of the most interesting Slack conversations to the public.
+          Today we're talking about: TIL and Tip.
 
           ## http://permalink-1.com
 

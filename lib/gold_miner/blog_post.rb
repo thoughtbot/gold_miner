@@ -23,6 +23,7 @@ module GoldMiner
 
         Welcome to another edition of This Week in #dev, a series of posts where we
         bring some of the most interesting Slack conversations to the public.
+        Today we're talking about: #{topics_sentence}.
 
         #{highlights}
 
@@ -59,6 +60,10 @@ module GoldMiner
       start_date = Helpers::Time.pretty_date(Date.parse(@since))
 
       "(#{start_date})"
+    end
+
+    def topics_sentence
+      Helpers::Sentence.from(topics)
     end
 
     def topic_tags
