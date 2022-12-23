@@ -3,7 +3,7 @@ module GoldMiner
     LANGUAGE_MATCHERS = {
       "Ruby" => ["ruby", "ruby on rails"],
       "Elixir" => ["elixir"],
-      "JavaScript" => ["javascript", "js", "node", "nodejs"],
+      "JavaScript" => ["javascript", "js", "node", "nodejs", "yarn", "npm"],
       "TypeScript" => ["typescript", "ts"],
       "SQL" => ["sql"],
       "CSS" => ["css"]
@@ -12,7 +12,7 @@ module GoldMiner
       "Ruby on Rails" => ["ruby on rails"],
       "React" => ["react", "reactjs"],
       "React Native" => ["react native"],
-      "Tailwind" => ["tailwind css", "tailwindcss", "tailwind"],
+      "Tailwind" => ["tailwind css", "tailwindcss", "tailwind"]
     }
     TECHNIQUE_MATCHERS = {
       "Refactoring" => ["refactor", "refactoring"],
