@@ -7,9 +7,9 @@ RSpec.describe GoldMiner::BlogPost do
     it "creates a blogpost from a list of messages" do
       travel_to "2022-10-07" do
         messages = [
-          {text: "TIL 1", author_username: "user2", permalink: "http://permalink-1.com", topic: :til},
-          {text: "TIL 2", author_username: "user1", permalink: "http://permalink-2.com", topic: :til},
-          {text: "Tip 1", author_username: "user2", permalink: "http://permalink-3.com", topic: :tip}
+          {text: "TIL 1", author_username: "user2", permalink: "http://permalink-1.com"},
+          {text: "TIL 2", author_username: "user1", permalink: "http://permalink-2.com"},
+          {text: "Tip 1", author_username: "user2", permalink: "http://permalink-3.com"}
         ]
         blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: messages, since: "2022-09-30")
 
@@ -26,6 +26,7 @@ RSpec.describe GoldMiner::BlogPost do
 
           Welcome to another edition of This Week in #dev, a series of posts where we
           bring some of the most interesting Slack conversations to the public.
+          Today we're talking about: TIL and Tip.
 
           ## http://permalink-1.com
 

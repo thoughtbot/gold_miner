@@ -23,6 +23,7 @@ module GoldMiner
 
         Welcome to another edition of This Week in #dev, a series of posts where we
         bring some of the most interesting Slack conversations to the public.
+        Today we're talking about: #{topics_sentence}.
 
         #{highlights}
 
@@ -39,7 +40,7 @@ module GoldMiner
     def tags
       [
         "this-week-in-#{@slack_channel}",
-        *topics
+        *topic_tags
       ].join(", ")
     end
 
@@ -61,8 +62,20 @@ module GoldMiner
       "(#{start_date})"
     end
 
+    def topics_sentence
+      Helpers::Sentence.from(topics)
+    end
+
+    def topic_tags
+      topics.map(&:downcase)
+    end
+
     def topics
-      @messages.map { |message| message[:topic] }.uniq
+      @topics ||= @messages.flat_map { |message| topics_from(message) }.uniq
+    end
+
+    def topics_from(message)
+      GoldMiner::TopicExtractor.call(message[:text])
     end
 
     def authors
