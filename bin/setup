@@ -47,8 +47,16 @@ def log(message)
   puts bold green "⛏ #{message}"
 end
 
-def has_slack_api_token?(env)
-  env.match?(/SLACK_API_TOKEN=.+/) && !env.include?("example-token")
+def has_token?(env_file, name)
+  env_file.match?(/#{name}_API_TOKEN=.+/) && !env_file.include?("example-token")
+end
+
+def has_slack_api_token?(env_file)
+  has_token?(env_file, "SLACK")
+end
+
+def has_open_ai_token?(env_file)
+  has_token?(env_file, "OPEN_AI")
 end
 
 # Steps
@@ -84,6 +92,21 @@ def check_for_slack_api_token
   end
 end
 
+def check_for_open_ai_token
+  log "Checking for OpenAI API token"
+
+  env = File.read(".env")
+  if has_open_ai_token?(env)
+    puts "Found OpenAI API token"
+  else
+    puts <<~MESSAGE
+      No OpenAI API token found. #{bold("This is not required to run GoldMiner")}, but if you would
+      like the help of an AI to write your blog posts, create an account and generate a token in the
+      #{link_to("OpenAI website", "https://openai.com/api")}.
+    MESSAGE
+  end
+end
+
 def done
   log "Done! 🎉"
   puts "You're set. Run #{bold "exe/gold_miner"} to create a new blog post."
@@ -94,4 +117,5 @@ end
 create_env_file
 install_dependencies
 check_for_slack_api_token
+check_for_open_ai_token
 done
