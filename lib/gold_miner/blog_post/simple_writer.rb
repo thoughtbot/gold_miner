@@ -7,16 +7,16 @@ module GoldMiner
         @topic_extractor = topic_extractor
       end
 
-      def extract_topics_from(message_text)
-        @topic_extractor.call(message_text)
+      def extract_topics_from(message)
+        @topic_extractor.call(message[:text])
       end
 
       def give_title_to(message)
         message[:permalink]
       end
 
-      def summarize(message_text)
-        message_text
+      def summarize(message)
+        message[:text]
       end
     end
   end

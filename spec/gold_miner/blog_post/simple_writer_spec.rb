@@ -11,16 +11,17 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
     it "delegates to the topic extractor" do
       topics = ["topic-#{rand}"]
       topic_extractor = double(:topic_extractor, call: topics)
+      message = {text: "message text"}
 
       writer = described_class.new(topic_extractor: topic_extractor)
-      extracted_topics = writer.extract_topics_from("message text")
+      extracted_topics = writer.extract_topics_from(message)
 
       expect(extracted_topics).to eq(topics)
-      expect(topic_extractor).to have_received(:call).with("message text")
+      expect(topic_extractor).to have_received(:call).with(message[:text])
     end
 
     it "has a default topic extractor" do
-      message = "message text"
+      message = {text: "message text"}
       writer = described_class.new
 
       extracted_topics = writer.extract_topics_from(message)
@@ -42,12 +43,12 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
 
   describe "#summarize" do
     it "returns the given text" do
-      message = "message text"
+      message = {text: "message text"}
       writer = described_class.new
 
       summary = writer.summarize(message)
 
-      expect(summary).to eq(message)
+      expect(summary).to eq(message[:text])
     end
   end
 end

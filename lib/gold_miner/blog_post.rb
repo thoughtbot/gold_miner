@@ -53,7 +53,7 @@ module GoldMiner
       <<~MARKDOWN
         ## #{@writer.give_title_to(message)}
 
-        #{@writer.summarize(message[:text])}
+        #{@writer.summarize(message)}
       MARKDOWN
     end
 
@@ -76,7 +76,7 @@ module GoldMiner
     end
 
     def topics_from(message)
-      @writer.extract_topics_from(message[:text])
+      @writer.extract_topics_from(message)
     end
 
     def authors
