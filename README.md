@@ -36,6 +36,12 @@ API Token"). If that doesn't work, ask [someone on the team] for help.
 After setting the token on the .env file, rerun the setup script to finish the
 installation.
 
+### Setup OpenAI (optional)
+
+If you'd like the help of an AI to generate a blog post, you can set the
+`OPEN_AI_API_TOKEN` environment variable. To get one, create an account and
+generate a token on the [OpenAI website](https://openai.com/api).
+
 ## Usage
 
 To generate a blog post, run the following command:

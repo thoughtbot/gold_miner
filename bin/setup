@@ -101,7 +101,7 @@ def check_for_open_ai_token
   else
     puts <<~MESSAGE
       No OpenAI API token found. #{bold("This is not required to run GoldMiner")}, but if you would
-      like the help of an AI to write your blog posts, create an account and generate a token in the
+      like the help of an AI to write your blog posts, create an account and generate a token on the
       #{link_to("OpenAI website", "https://openai.com/api")}.
     MESSAGE
   end
