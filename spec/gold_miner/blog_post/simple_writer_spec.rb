@@ -3,7 +3,9 @@
 require "spec_helper"
 
 RSpec.describe GoldMiner::BlogPost::SimpleWriter do
-  it_behaves_like "a blog post writer"
+  it_behaves_like "a blog post writer" do
+    let(:writer_instance) { described_class.new }
+  end
 
   describe "#extract_topics_from" do
     it "delegates to the topic extractor" do
