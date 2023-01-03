@@ -115,6 +115,24 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
       end
     end
+
+    context "when an SocketError is raised" do
+      it "uses the fallback writer" do
+        mock_client_instance = instance_double(OpenAI::Client)
+        allow(mock_client_instance).to receive(:completions).and_raise(SocketError)
+        mock_client_class = class_double(OpenAI::Client, new: mock_client_instance)
+        token = "valid-token"
+        message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
+        fallback_topics = ["Ruby"]
+        fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
+
+        writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer, open_ai_client: mock_client_class)
+        title = writer.extract_topics_from(message)
+
+        expect(title).to eq(fallback_topics)
+        expect(fallback_writer).to have_received(:extract_topics_from).with(message)
+      end
+    end
   end
 
   describe "#give_title_to" do

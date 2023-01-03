@@ -5,8 +5,8 @@ require "json"
 module GoldMiner
   class BlogPost
     class OpenAiWriter
-      def initialize(open_ai_api_token:, fallback_writer:)
-        @openai_client = OpenAI::Client.new(access_token: open_ai_api_token)
+      def initialize(open_ai_api_token:, fallback_writer:, open_ai_client: OpenAI::Client)
+        @openai_client = open_ai_client.new(access_token: open_ai_api_token)
         @fallback_writer = fallback_writer
       end
 
@@ -55,6 +55,8 @@ module GoldMiner
         end
 
         response["choices"].first["text"].strip
+      rescue SocketError
+        nil
       end
 
       def fallback_title_for(message)
