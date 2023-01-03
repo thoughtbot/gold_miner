@@ -97,7 +97,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         }.to output("[WARNING] OpenAI error: #{open_ai_error}\n").to_stderr
       end
 
-      it "uses the fallback writer to return a title" do
+      it "uses the fallback writer to extract topics" do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
         stub_open_ai_error(
