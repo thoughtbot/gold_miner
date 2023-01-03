@@ -19,7 +19,7 @@ RSpec.describe GoldMiner::SlackClient do
       result = GoldMiner::SlackClient.build(api_token: token)
       error_message = result.failure
 
-      expect(error_message).to eq "Authentication failed. Please check your API token."
+      expect(error_message).to eq "Slack authentication failed. Please check your API token."
     end
 
     it "returns a failure monad if api_token is invalid" do
@@ -29,7 +29,19 @@ RSpec.describe GoldMiner::SlackClient do
       result = GoldMiner::SlackClient.build(api_token: token)
       error_message = result.failure
 
-      expect(error_message).to eq "Authentication failed. Please check your API token."
+      expect(error_message).to eq "Slack authentication failed. Please check your API token."
+    end
+
+    it "returns a failure monad if a http request fails" do
+      mock_client_instance = instance_double(Slack::Web::Client)
+      allow(mock_client_instance).to receive(:auth_test).and_raise(Slack::Web::Api::Errors::TimeoutError, "timeout_error")
+      mock_client_class = class_double(Slack::Web::Client, new: mock_client_instance)
+      token = "valid-token"
+
+      result = GoldMiner::SlackClient.build(api_token: token, slack_client: mock_client_class)
+      error_message = result.failure
+
+      expect(error_message).to eq "Slack authentication failed. An HTTP error occurred: timeout_error."
     end
   end
 

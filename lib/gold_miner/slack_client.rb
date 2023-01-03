@@ -9,20 +9,22 @@ module GoldMiner
 
     extend Dry::Monads[:result]
 
-    def self.build(api_token:)
-      client = new(api_token)
+    def self.build(api_token:, slack_client: ::Slack::Web::Client)
+      client = new(api_token, slack_client)
 
       begin
         client.auth_test
 
         Success(client)
-      rescue Slack::Web::Api::Errors::InvalidAuth, Slack::Web::Api::Errors::NotAuthed
-        Failure("Authentication failed. Please check your API token.")
+      rescue Slack::Web::Api::Errors::SlackError
+        Failure("Slack authentication failed. Please check your API token.")
+      rescue Slack::Web::Api::Errors::HttpRequestError => e
+        Failure("Slack authentication failed. An HTTP error occurred: #{e.message}.")
       end
     end
 
-    def initialize(api_token)
-      @slack = Slack::Web::Client.new(token: api_token)
+    def initialize(api_token, slack_client)
+      @slack = slack_client.new(token: api_token)
     end
 
     def auth_test
