@@ -9,7 +9,7 @@ module GoldMiner
   extend self
 
   def mine_in(slack_channel, slack_client: GoldMiner::SlackClient, env_file: ".env")
-    Dotenv.load(env_file)
+    Dotenv.load!(env_file)
 
     slack_client
       .build(api_token: ENV["SLACK_API_TOKEN"])
