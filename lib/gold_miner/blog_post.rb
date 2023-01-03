@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/monads"
-require "slack-ruby-client"
-
 module GoldMiner
   class BlogPost
     def initialize(slack_channel:, messages:, since:, writer: SimpleWriter.new)
