@@ -48,7 +48,7 @@ def log(message)
 end
 
 def has_token?(env_file, name)
-  env_file.match?(/#{name}_API_TOKEN=.+/) && !env_file.include?("example-token")
+  env_file.match?(/#{name}_API_TOKEN=\S+/) && !env_file.match?(/#{name}_API_TOKEN=example-token/)
 end
 
 def has_slack_api_token?(env_file)
