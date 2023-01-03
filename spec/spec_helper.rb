@@ -8,7 +8,8 @@ end
 require "gold_miner"
 require "timecop"
 require "webmock/rspec"
-require_relative "support/timecop"
+
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

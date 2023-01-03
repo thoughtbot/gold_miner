@@ -5,10 +5,11 @@ require "slack-ruby-client"
 
 module GoldMiner
   class BlogPost
-    def initialize(slack_channel:, messages:, since:)
+    def initialize(slack_channel:, messages:, since:, writer: SimpleWriter.new)
       @slack_channel = slack_channel
       @messages = messages
       @since = since
+      @writer = writer
     end
 
     def to_s
@@ -50,9 +51,9 @@ module GoldMiner
 
     def highlight_from(message)
       <<~MARKDOWN
-        ## #{message[:permalink]}
+        ## #{@writer.give_title_to(message)}
 
-        #{message[:text]}
+        #{@writer.summarize(message)}
       MARKDOWN
     end
 
@@ -75,7 +76,7 @@ module GoldMiner
     end
 
     def topics_from(message)
-      GoldMiner::TopicExtractor.call(message[:text])
+      @writer.extract_topics_from(message)
     end
 
     def authors
