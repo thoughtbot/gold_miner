@@ -64,7 +64,7 @@ module GoldMiner
         {
           text: match.text,
           author_username: match.username,
-          permalink: match.permalink,
+          permalink: match.permalink
         }
       end
     end
