@@ -18,7 +18,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
       message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
       open_ai_topics = ["Ruby", "Enumerable"]
-      stub_open_ai_request(
+      request = stub_open_ai_request(
         token: token,
         prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
         response_status: 200,
@@ -42,6 +42,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       topics = writer.extract_topics_from(message)
 
       expect(topics).to eq(open_ai_topics)
+      expect(request).to have_been_requested.once
     end
 
     context "when OpenAI returns an invalid JSON" do
@@ -49,7 +50,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         token = "valid-token"
         message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
         invalid_json = '`["Ruby"]`'
-        stub_open_ai_request(
+        request = stub_open_ai_request(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
           response_status: 200,
@@ -77,6 +78,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
         expect(title).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
+        expect(request).to have_been_requested.once
       end
     end
 
@@ -85,7 +87,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
           response_error: open_ai_error
@@ -95,12 +97,13 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         expect {
           writer.extract_topics_from(message)
         }.to output("[WARNING] OpenAI error: #{open_ai_error}\n").to_stderr
+        expect(request).to have_been_requested.once
       end
 
       it "uses the fallback writer to extract topics" do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
           response_error: "Some error"
@@ -113,6 +116,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
         expect(title).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
+        expect(request).to have_been_requested.once
       end
     end
 
@@ -141,7 +145,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
       message = {text: "Enumerable#each_with_object is a great method!"}
       open_ai_title = "\n\n\"The Power of Enumerable#each_with_object\""
-      stub_open_ai_request(
+      request = stub_open_ai_request(
         token: token,
         prompt: "Give a small title to this text: #{message[:text]}",
         response_status: 200,
@@ -166,6 +170,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       expected_title = open_ai_title.strip.delete('"')
       expect(title).to eq(expected_title)
+      expect(request).to have_been_requested.once
     end
 
     context "with an invalid token" do
@@ -173,7 +178,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Give a small title to this text: #{message[:text]}",
           response_error: open_ai_error
@@ -183,12 +188,13 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         expect {
           writer.give_title_to(message)
         }.to output("[WARNING] OpenAI error: #{open_ai_error}\n").to_stderr
+        expect(request).to have_been_requested.once
       end
 
       it "uses the fallback writer to return a title" do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Give a small title to this text: #{message[:text]}",
           response_error: "Some error"
@@ -201,6 +207,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
         expect(title).to eq(fallback_title)
         expect(fallback_writer).to have_received(:give_title_to).with(message)
+        expect(request).to have_been_requested.once
       end
     end
   end
@@ -213,7 +220,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         permalink: "https://example.com/123"
       }
       open_ai_summary = "\n\nEnumerable#each_with_object is like #reduce, but easier to understand."
-      stub_open_ai_request(
+      request = stub_open_ai_request(
         token: token,
         prompt: "Summarize this text: #{message[:text]}",
         response_status: 200,
@@ -241,6 +248,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
         Source: #{message[:permalink]}
       SUMMARY
+      expect(request).to have_been_requested.once
     end
 
     context "with an invalid token" do
@@ -248,7 +256,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method! It's like #reduce, but easier to understand."}
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Summarize this text: #{message[:text]}",
           response_error: open_ai_error
@@ -258,12 +266,13 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         expect {
           writer.summarize(message)
         }.to output("[WARNING] OpenAI error: #{open_ai_error}\n").to_stderr
+        expect(request).to have_been_requested.once
       end
 
       it "uses the fallback writer to return a summary" do
         token = "invalid-token"
         message = {text: "Enumerable#each_with_object is a great method!"}
-        stub_open_ai_error(
+        request = stub_open_ai_error(
           token: token,
           prompt: "Summarize this text: #{message[:text]}",
           response_error: "Some error"
@@ -276,6 +285,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
         expect(title).to eq(fallback_summary)
         expect(fallback_writer).to have_received(:summarize).with(message)
+        expect(request).to have_been_requested.once
       end
     end
   end
