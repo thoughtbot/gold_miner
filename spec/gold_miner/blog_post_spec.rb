@@ -7,9 +7,9 @@ RSpec.describe GoldMiner::BlogPost do
     it "creates a blogpost from a list of messages" do
       travel_to "2022-10-07" do
         messages = [
-          {text: "TIL 1", author_username: "user2", permalink: "http://permalink-1.com"},
-          {text: "TIL 2", author_username: "user1", permalink: "http://permalink-2.com"},
-          {text: "Tip 1", author_username: "user2", permalink: "http://permalink-3.com"}
+          GoldMiner::Slack::Message.new(text: "TIL 1", author: "John Doe", permalink: "http://permalink-1.com"),
+          GoldMiner::Slack::Message.new(text: "TIL 2", author: "Jane Smith", permalink: "http://permalink-2.com"),
+          GoldMiner::Slack::Message.new(text: "Tip 1", author: "John Doe", permalink: "http://permalink-3.com")
         ]
         blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: messages, since: "2022-09-30")
 
@@ -42,7 +42,7 @@ RSpec.describe GoldMiner::BlogPost do
 
           ## Thanks
 
-          This edition was brought to you by: @user1 and @user2. Thanks to all contributors! 🎉
+          This edition was brought to you by: Jane Smith and John Doe. Thanks to all contributors! 🎉
         MARKDOWN
       end
     end

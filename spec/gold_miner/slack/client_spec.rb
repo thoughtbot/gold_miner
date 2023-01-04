@@ -46,7 +46,7 @@ RSpec.describe GoldMiner::Slack::Client do
   end
 
   describe "#search_interesting_messages_in" do
-    it "returns uniq til and tip messages sent on dev channel since last friday" do
+    it "returns uniq interesting messages sent on dev channel since last friday" do
       travel_to "2022-10-07" do
         token = "valid-token"
         stub_slack_auth_test_request(status: 200, token: token)
@@ -56,8 +56,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
-                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"}
+                {"text" => "TIL", "user" => "user-id", "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -69,8 +69,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "Ruby tip: have fun!", "username" => "user2", "permalink" => "https:///message-3-permalink.com"}
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "Ruby tip: have fun!", "user" => "user2-id", "permalink" => "https:///message-3-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -82,22 +82,42 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "CSS clamp() is so cool!", "username" => "user3", "permalink" => "https:///message-4-permalink.com"}
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "CSS clamp() is so cool!", "user" => "user3-id", "permalink" => "https:///message-4-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
           }
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User"}}}
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user2-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 2"}}}
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user3-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 3"}}}
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user4-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 4"}}}
         )
         slack = GoldMiner::Slack::Client.build(api_token: token).value!
 
         messages = slack.search_interesting_messages_in("dev")
 
         expect(messages).to match_array [
-          {text: "TIL", author_username: "user", permalink: "https:///message-1-permalink.com"},
-          {text: "Ruby tip/TIL: Array#sample...", author_username: "user2", permalink: "https:///message-2-permalink.com"},
-          {text: "Ruby tip: have fun!", author_username: "user2", permalink: "https:///message-3-permalink.com"},
-          {text: "CSS clamp() is so cool!", author_username: "user3", permalink: "https:///message-4-permalink.com"}
+          GoldMiner::Slack::Message.new(text: "TIL", author: "User", permalink: "https:///message-1-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "Ruby tip/TIL: Array#sample...", author: "User 2", permalink: "https:///message-2-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "Ruby tip: have fun!", author: "User 2", permalink: "https:///message-3-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "CSS clamp() is so cool!", author: "User 3", permalink: "https:///message-4-permalink.com")
         ]
       end
     end
@@ -112,8 +132,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "TIL", "username" => "user", "permalink" => "https:///message-1-permalink.com"},
-                {"text" => "Ruby tip/TIL: Array#sample...", "username" => "user2", "permalink" => "https:///message-2-permalink.com"}
+                {"text" => "TIL", "user" => "user-id", "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 2}
             }
@@ -138,6 +158,16 @@ RSpec.describe GoldMiner::Slack::Client do
               "paging" => {"pages" => 1}
             }
           }
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User"}}}
+        )
+        stub_slack_users_info_request(
+          token: token,
+          user_id: "user2-id",
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 2"}}}
         )
         slack = GoldMiner::Slack::Client.build(api_token: token).value!
 
@@ -171,6 +201,21 @@ RSpec.describe GoldMiner::Slack::Client do
         headers: {
           "Accept" => "application/json; charset=utf-8",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Content-Type" => "application/x-www-form-urlencoded",
+          "User-Agent" => "Slack Ruby Client/1.1.0"
+        }
+      )
+      .to_return(status: 200, body: body.to_json, headers: {})
+  end
+
+  def stub_slack_users_info_request(token:, user_id:, body:)
+    stub_request(:post, "https://slack.com/api/users.info")
+      .with(
+        body: {"user" => user_id},
+        headers: {
+          "Accept" => "application/json; charset=utf-8",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Authorization" => "Bearer #{token}",
           "Content-Type" => "application/x-www-form-urlencoded",
           "User-Agent" => "Slack Ruby Client/1.1.0"
         }
