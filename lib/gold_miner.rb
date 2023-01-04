@@ -9,7 +9,7 @@ Zeitwerk::Loader.for_gem.setup
 module GoldMiner
   extend self
 
-  def mine_in(slack_channel, slack_client: GoldMiner::SlackClient, env_file: ".env")
+  def mine_in(slack_channel, slack_client: GoldMiner::Slack::Client, env_file: ".env")
     Dotenv.load!(env_file)
 
     slack_client

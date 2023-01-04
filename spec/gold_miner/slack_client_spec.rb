@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-RSpec.describe GoldMiner::SlackClient do
+RSpec.describe GoldMiner::Slack::Client do
   describe ".build" do
     it "returns a success monad if api_token is valid" do
       token = "valid-token"
       stub_slack_auth_test_request(status: 200, token: token)
 
-      result = GoldMiner::SlackClient.build(api_token: token)
+      result = GoldMiner::Slack::Client.build(api_token: token)
 
       expect(result).to be_success
-      expect(result.value!).to be_a GoldMiner::SlackClient
+      expect(result.value!).to be_a GoldMiner::Slack::Client
     end
 
     it "returns a failure monad if api_token is nil" do
       token = nil
       stub_slack_auth_test_request(token: token, body: {"ok" => false, "error" => "not_authed"})
 
-      result = GoldMiner::SlackClient.build(api_token: token)
+      result = GoldMiner::Slack::Client.build(api_token: token)
       error_message = result.failure
 
       expect(error_message).to eq "Slack authentication failed. Please check your API token."
@@ -26,7 +26,7 @@ RSpec.describe GoldMiner::SlackClient do
       token = "invalid-token"
       stub_slack_auth_test_request(token: token, body: {"ok" => false, "error" => "invalid_auth"})
 
-      result = GoldMiner::SlackClient.build(api_token: token)
+      result = GoldMiner::Slack::Client.build(api_token: token)
       error_message = result.failure
 
       expect(error_message).to eq "Slack authentication failed. Please check your API token."
@@ -38,7 +38,7 @@ RSpec.describe GoldMiner::SlackClient do
       mock_client_class = class_double(Slack::Web::Client, new: mock_client_instance)
       token = "valid-token"
 
-      result = GoldMiner::SlackClient.build(api_token: token, slack_client: mock_client_class)
+      result = GoldMiner::Slack::Client.build(api_token: token, slack_client: mock_client_class)
       error_message = result.failure
 
       expect(error_message).to eq "Slack authentication failed. An HTTP error occurred: timeout_error."
@@ -89,7 +89,7 @@ RSpec.describe GoldMiner::SlackClient do
             }
           }
         )
-        slack = GoldMiner::SlackClient.build(api_token: token).value!
+        slack = GoldMiner::Slack::Client.build(api_token: token).value!
 
         messages = slack.search_interesting_messages_in("dev")
 
@@ -139,7 +139,7 @@ RSpec.describe GoldMiner::SlackClient do
             }
           }
         )
-        slack = GoldMiner::SlackClient.build(api_token: token).value!
+        slack = GoldMiner::Slack::Client.build(api_token: token).value!
 
         expect {
           slack.search_interesting_messages_in("dev")

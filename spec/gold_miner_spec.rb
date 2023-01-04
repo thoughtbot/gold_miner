@@ -7,7 +7,7 @@ RSpec.describe GoldMiner do
 
   describe ".mine_in" do
     it "loads the API token from the given env file" do
-      slack_client_builder = spy("SlackClient builder")
+      slack_client_builder = spy("Slack::Client builder")
 
       GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 
@@ -16,8 +16,8 @@ RSpec.describe GoldMiner do
 
     it "returns interesting messages from the given channel" do
       messages = {text: "text", author_username: "user1", permalink: "http://permalink-1.com"}
-      slack_client = instance_double(GoldMiner::SlackClient, search_interesting_messages_in: messages)
-      slack_client_builder = double(GoldMiner::SlackClient, build: Success(slack_client))
+      slack_client = instance_double(GoldMiner::Slack::Client, search_interesting_messages_in: messages)
+      slack_client_builder = double(GoldMiner::Slack::Client, build: Success(slack_client))
 
       result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 

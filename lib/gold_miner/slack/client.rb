@@ -4,7 +4,7 @@ require "dry/monads"
 require "slack-ruby-client"
 
 module GoldMiner
-  class SlackClient
+  class Slack::Client
     GOLD_EMOJI = "rupee-gold"
 
     extend Dry::Monads[:result]
@@ -16,9 +16,9 @@ module GoldMiner
         client.auth_test
 
         Success(client)
-      rescue Slack::Web::Api::Errors::SlackError
+      rescue ::Slack::Web::Api::Errors::SlackError
         Failure("Slack authentication failed. Please check your API token.")
-      rescue Slack::Web::Api::Errors::HttpRequestError => e
+      rescue ::Slack::Web::Api::Errors::HttpRequestError => e
         Failure("Slack authentication failed. An HTTP error occurred: #{e.message}.")
       end
     end
