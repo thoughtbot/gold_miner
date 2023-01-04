@@ -61,12 +61,16 @@ module GoldMiner
       warn_on_multiple_pages(result)
 
       result.messages.matches.map do |match|
-        {
+        Slack::Message.new(
           text: match.text,
-          author_username: match.username,
+          author: fetch_author_name(match.user),
           permalink: match.permalink
-        }
+        )
       end
+    end
+
+    def fetch_author_name(user_id)
+      @slack.users_info(user: user_id).user.profile.real_name
     end
 
     # For simplicity, I'm not handling API pagination yet
