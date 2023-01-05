@@ -6,7 +6,14 @@ require "gold_miner"
 
 channel = ARGV.first || "dev"
 
+t0 = Time.now
+
 GoldMiner
   .mine_in(channel)
-  .fmap { |messages| puts GoldMiner.convert_messages_to_blogpost(channel, messages) }
+  .fmap { |messages|
+    puts "Found #{messages.size} messages in #{Time.now - t0} seconds."
+    puts GoldMiner.convert_messages_to_blogpost(channel, messages)
+  }
   .or { |error| abort "[ERROR] #{error}" }
+
+puts "Done in #{Time.now - t0} seconds."
