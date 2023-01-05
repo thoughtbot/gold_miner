@@ -9,7 +9,7 @@ It uses the Slack API to [search for messages in a channel], then it groups and
 _\* At this point, "interesting" means "messages that contain 'TIL', 'tip' or
 have been reacted with the :rupee-gold: emoji"._
 
-[thoughtbot blog]: https://github.com/thoughtbot/robots.thoughtbot.com
+[thoughtbot blog]: https://thoughtbot.com/blog
 [search for messages in a channel]: https://github.com/thoughtbot/gold_miner/blob/main/lib/gold_miner/slack_client.rb#L30
 [formats them into a markdown blog post]: https://github.com/thoughtbot/gold_miner/blob/main/lib/gold_miner/blog_post.rb#L14
 
