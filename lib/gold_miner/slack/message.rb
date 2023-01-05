@@ -17,5 +17,9 @@ module GoldMiner
         self[:author] == other[:author] &&
         self[:permalink] == other[:permalink]
     end
+
+    def as_conversation
+      "#{self[:author]} says: #{self[:text]}"
+    end
   end
 end

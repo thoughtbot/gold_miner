@@ -16,7 +16,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     it "returns a list of topics from the message text" do
       token = "valid-token"
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
-      message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
+      message = create_message
       open_ai_topics = ["Ruby", "Enumerable"]
       request = stub_open_ai_request(
         token: token,
@@ -48,7 +48,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "when OpenAI returns an invalid JSON" do
       it "uses the fallback writer" do
         token = "valid-token"
-        message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
+        message = create_message
         invalid_json = '`["Ruby"]`'
         request = stub_open_ai_request(
           token: token,
@@ -85,7 +85,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method!"}
+        message = create_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
@@ -102,7 +102,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to extract topics" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method!"}
+        message = create_message
         request = stub_open_ai_error(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
@@ -126,7 +126,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         allow(mock_client_instance).to receive(:completions).and_raise(SocketError)
         mock_client_class = class_double(OpenAI::Client, new: mock_client_instance)
         token = "valid-token"
-        message = {text: "Enumerable#each_with_object is a great method in Ruby!"}
+        message = create_message
         fallback_topics = ["Ruby"]
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
@@ -143,7 +143,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     it "returns the message permalink" do
       token = "valid-token"
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
-      message = {text: "Enumerable#each_with_object is a great method!"}
+      message = create_message
       open_ai_title = "\n\n\"The Power of Enumerable#each_with_object\""
       request = stub_open_ai_request(
         token: token,
@@ -176,7 +176,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method!"}
+        message = create_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
@@ -193,7 +193,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to return a title" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method!"}
+        message = create_message
         request = stub_open_ai_error(
           token: token,
           prompt: "Give a small title to this text: #{message[:text]}",
@@ -215,14 +215,11 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   describe "#summarize" do
     it "returns a summary of the given text" do
       token = "valid-token"
-      message = {
-        text: "Enumerable#each_with_object is a great method! It's like #reduce, but easier to understand.",
-        permalink: "https://example.com/123"
-      }
+      message = create_message
       open_ai_summary = "\n\nEnumerable#each_with_object is like #reduce, but easier to understand."
       request = stub_open_ai_request(
         token: token,
-        prompt: "Summarize this text: #{message[:text]}",
+        prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
         response_status: 200,
         response_body: {
           "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
@@ -254,11 +251,11 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method! It's like #reduce, but easier to understand."}
+        message = create_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
-          prompt: "Summarize this text: #{message[:text]}",
+          prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
           response_error: open_ai_error
         )
         writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
@@ -271,10 +268,10 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to return a summary" do
         token = "invalid-token"
-        message = {text: "Enumerable#each_with_object is a great method!"}
+        message = create_message
         request = stub_open_ai_error(
           token: token,
-          prompt: "Summarize this text: #{message[:text]}",
+          prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
           response_error: "Some error"
         )
         fallback_summary = "[TODO]"
@@ -291,6 +288,10 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   end
 
   private
+
+  def create_message
+    GoldMiner::Slack::Message.new(text: "Some text", author: "Some author", permalink: "https://example.com/123")
+  end
 
   def stub_open_ai_error(token:, prompt:, response_error:)
     stub_open_ai_request(

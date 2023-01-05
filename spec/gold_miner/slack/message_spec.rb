@@ -66,4 +66,18 @@ RSpec.describe GoldMiner::Slack::Message do
       expect(message3 == message4).to be false
     end
   end
+
+  describe "#as_conversation" do
+    it "returns the message content with the author name" do
+      message = described_class.new(
+        text: "TIL",
+        author: "@JohnDoe",
+        permalink: "https:///message-1-permalink.com"
+      )
+
+      conversation = message.as_conversation
+
+      expect(conversation).to eq "@JohnDoe says: TIL"
+    end
+  end
 end

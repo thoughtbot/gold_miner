@@ -28,7 +28,7 @@ module GoldMiner
       end
 
       def summarize(message)
-        summary = ask_openai("Summarize this text: #{message[:text]}")
+        summary = ask_openai("Summarize this text:\n\n#{message.as_conversation}")
 
         if summary
           "#{summary}\n\nSource: #{message[:permalink]}"
