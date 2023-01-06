@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
   spec.add_dependency "async"
   spec.add_dependency "dotenv", "~> 2.8.0"
   spec.add_dependency "dry-monads", "~> 1.3.0"
