@@ -72,7 +72,9 @@ module GoldMiner
       end
 
       def try_parse_json(json)
-        JSON.parse(json.to_s)
+        sanitized_json = json.to_s.delete_prefix("`").delete_suffix("`")
+
+        JSON.parse(sanitized_json)
       rescue JSON::ParserError
         nil
       end

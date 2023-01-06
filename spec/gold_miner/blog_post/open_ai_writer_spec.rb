@@ -45,11 +45,45 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       expect(request).to have_been_requested.once
     end
 
+    context "when OpenAI returns a JSON wrapped in backticks" do
+      it "removes the backticks and parses the JSON" do
+        token = "valid-token"
+        message = create_message
+        json = '`["Ruby"]`'
+        request = stub_open_ai_request(
+          token: token,
+          prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
+          response_status: 200,
+          response_body: {
+            "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
+            "object" => "text_completion",
+            "created" => 1671825952,
+            "model" => "text-davinci-003",
+            "choices" => [
+              {
+                "text" => json,
+                "index" => 0,
+                "logprobs" => nil,
+                "finish_reason" => "stop"
+              }
+            ],
+            "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+          }
+        )
+        writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
+
+        topics = writer.extract_topics_from(message)
+
+        expect(topics).to eq(["Ruby"])
+        expect(request).to have_been_requested.once
+      end
+    end
+
     context "when OpenAI returns an invalid JSON" do
       it "uses the fallback writer" do
         token = "valid-token"
         message = create_message
-        invalid_json = '`["Ruby"]`'
+        invalid_json = '{"Ruby"}'
         request = stub_open_ai_request(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
@@ -74,9 +108,9 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer)
-        title = writer.extract_topics_from(message)
+        topics = writer.extract_topics_from(message)
 
-        expect(title).to eq(fallback_topics)
+        expect(topics).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
         expect(request).to have_been_requested.once
       end
@@ -112,9 +146,9 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer)
-        title = writer.extract_topics_from(message)
+        topics = writer.extract_topics_from(message)
 
-        expect(title).to eq(fallback_topics)
+        expect(topics).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
         expect(request).to have_been_requested.once
       end
@@ -131,9 +165,9 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer, open_ai_client: mock_client_class)
-        title = writer.extract_topics_from(message)
+        topics = writer.extract_topics_from(message)
 
-        expect(title).to eq(fallback_topics)
+        expect(topics).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(message)
       end
     end
