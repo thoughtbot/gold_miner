@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "This gem searches for TILs and tips in a Slack channel and turns them into a blog post."
   spec.homepage = "https://github.com/thoughtbot/gold_miner"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.1.2"
+  spec.required_ruby_version = ">= 3.2.0"
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
