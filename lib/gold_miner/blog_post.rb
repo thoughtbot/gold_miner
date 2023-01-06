@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "async"
+
 module GoldMiner
   class BlogPost
     def initialize(slack_channel:, messages:, since:, writer: SimpleWriter.new)
@@ -10,25 +12,30 @@ module GoldMiner
     end
 
     def to_s
-      <<~MARKDOWN
-        ---
-        title: "#{title}"
-        tags: #{tags}
-        teaser: >
-          Highlights of what happened in our ##{@slack_channel} channel on Slack this week.
-        author: Matheus Richard
-        ---
+      Sync do
+        tags_task = Async { tags }
+        highlights_task = Async { highlights }
 
-        Welcome to another edition of This Week in #dev, a series of posts where we
-        bring some of the most interesting Slack conversations to the public.
-        Today we're talking about: #{topics_sentence}.
+        <<~MARKDOWN
+          ---
+          title: "#{title}"
+          tags: #{tags_task.wait}
+          teaser: >
+            Highlights of what happened in our ##{@slack_channel} channel on Slack this week.
+          author: Matheus Richard
+          ---
 
-        #{highlights}
+          Welcome to another edition of This Week in #dev, a series of posts where we
+          bring some of the most interesting Slack conversations to the public.
+          Today we're talking about: #{topics_sentence}.
 
-        ## Thanks
+          #{highlights_task.wait}
 
-        This edition was brought to you by: #{authors}. Thanks to all contributors! 🎉
-      MARKDOWN
+          ## Thanks
+
+          This edition was brought to you by: #{authors}. Thanks to all contributors! 🎉
+        MARKDOWN
+      end
     end
 
     def title
@@ -43,14 +50,21 @@ module GoldMiner
     end
 
     def highlights
-      @messages.map { |message| highlight_from(message) }.join("\n").chomp("")
+      @messages
+        .map { |message| Async { highlight_from(message) } }
+        .map(&:wait)
+        .join("\n")
+        .chomp("")
     end
 
     def highlight_from(message)
-      <<~MARKDOWN
-        ## #{@writer.give_title_to(message)}
+      title_task = Async { @writer.give_title_to(message) }
+      summary_task = Async { @writer.summarize(message) }
 
-        #{@writer.summarize(message)}
+      <<~MARKDOWN
+        ## #{title_task.wait}
+
+        #{summary_task.wait}
       MARKDOWN
     end
 
@@ -69,7 +83,10 @@ module GoldMiner
     end
 
     def topics
-      @topics ||= @messages.flat_map { |message| topics_from(message) }.uniq
+      @topics ||= @messages
+        .map { |message| Async { topics_from(message) } }
+        .flat_map(&:wait)
+        .uniq
     end
 
     def topics_from(message)
