@@ -100,7 +100,7 @@ available for User Tokens.
 - Then scroll back up to "OAuth Tokens for Your Workspace"
   and click "Install to Workspace"
 - You will be redirected to a page asking you to allow your app to be
-  installed to the workspace and listing the scopes/permissons you've selected
+  installed to the workspace and listing the scopes/permissions you've selected
 - Click "Allow"
 
 [search.messages]: https://api.slack.com/methods/search.messages
