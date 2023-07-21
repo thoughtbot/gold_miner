@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv", "~> 2.8.0"
   spec.add_dependency "dry-monads", "~> 1.3.0"
   spec.add_dependency "ruby-openai", "~> 3.0.0"
-  spec.add_dependency "slack-ruby-client", "~> 1.1.0"
+  spec.add_dependency "slack-ruby-client", ">= 1.1", "< 2.2"
   spec.add_dependency "zeitwerk", "~> 2.6.6"
 
   # For more information and examples about making a new gem, check out our
