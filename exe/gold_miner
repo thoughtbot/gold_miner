@@ -4,6 +4,12 @@ $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require "gold_miner"
 
+def debug(msg)
+  return if ENV["DEBUG"].nil?
+
+  puts "[DEBUG] #{msg}"
+end
+
 channel = ARGV.first || "dev"
 
 t0 = Time.now
@@ -11,9 +17,10 @@ t0 = Time.now
 GoldMiner
   .mine_in(channel)
   .fmap { |messages|
-    puts "Found #{messages.size} messages in #{Time.now - t0} seconds."
+    debug "Found #{messages.size} messages in #{Time.now - t0} seconds."
     puts GoldMiner.convert_messages_to_blogpost(channel, messages)
   }
   .or { |error| abort "[ERROR] #{error}" }
 
-puts "Done in #{Time.now - t0} seconds."
+puts
+debug "Done in #{Time.now - t0} seconds."
