@@ -184,8 +184,7 @@ RSpec.describe GoldMiner::Slack::Client do
     headers = {
       "Accept" => "application/json; charset=utf-8",
       "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-      "Content-Length" => "0",
-      "User-Agent" => "Slack Ruby Client/1.1.0"
+      "Content-Length" => "0"
     }
     headers["Authorization"] = "Bearer #{token}" if token
 
@@ -201,8 +200,7 @@ RSpec.describe GoldMiner::Slack::Client do
         headers: {
           "Accept" => "application/json; charset=utf-8",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Content-Type" => "application/x-www-form-urlencoded",
-          "User-Agent" => "Slack Ruby Client/1.1.0"
+          "Content-Type" => "application/x-www-form-urlencoded"
         }
       )
       .to_return(status: 200, body: body.to_json, headers: {})
@@ -216,8 +214,7 @@ RSpec.describe GoldMiner::Slack::Client do
           "Accept" => "application/json; charset=utf-8",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
           "Authorization" => "Bearer #{token}",
-          "Content-Type" => "application/x-www-form-urlencoded",
-          "User-Agent" => "Slack Ruby Client/1.1.0"
+          "Content-Type" => "application/x-www-form-urlencoded"
         }
       )
       .to_return(status: 200, body: body.to_json, headers: {})
