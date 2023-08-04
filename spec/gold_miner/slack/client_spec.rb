@@ -49,6 +49,10 @@ RSpec.describe GoldMiner::Slack::Client do
     it "returns uniq interesting messages sent on dev channel since last friday" do
       travel_to "2022-10-07" do
         token = "valid-token"
+        user1 = GoldMiner::Slack::User.new(id: "user-id-1", name: "User 1", username: "username-1")
+        user2 = GoldMiner::Slack::User.new(id: "user-id-2", name: "User 2", username: "username-2")
+        user3 = GoldMiner::Slack::User.new(id: "user-id-3", name: "User 3", username: "username-3")
+
         stub_slack_auth_test_request(status: 200, token: token)
         stub_slack_message_search_request(
           query: "TIL in:dev after:2022-09-30",
@@ -56,8 +60,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "TIL", "user" => "user-id", "permalink" => "https:///message-1-permalink.com"},
-                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"}
+                {"text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -69,8 +73,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "Ruby tip: have fun!", "user" => "user2-id", "permalink" => "https:///message-3-permalink.com"}
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "Ruby tip: have fun!", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-3-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -82,8 +86,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "CSS clamp() is so cool!", "user" => "user3-id", "permalink" => "https:///message-4-permalink.com"}
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"},
+                {"text" => "CSS clamp() is so cool!", "user" => user3.id, "username" => user3.username, "permalink" => "https:///message-4-permalink.com"}
               ],
               "paging" => {"pages" => 1}
             }
@@ -91,18 +95,18 @@ RSpec.describe GoldMiner::Slack::Client do
         )
         stub_slack_users_info_request(
           token: token,
-          user_id: "user-id",
-          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User"}}}
+          user_id: user1.id,
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => user1.name}}}
         )
         stub_slack_users_info_request(
           token: token,
-          user_id: "user2-id",
-          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 2"}}}
+          user_id: user2.id,
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => user2.name}}}
         )
         stub_slack_users_info_request(
           token: token,
-          user_id: "user3-id",
-          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 3"}}}
+          user_id: user3.id,
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => user3.name}}}
         )
         stub_slack_users_info_request(
           token: token,
@@ -114,10 +118,10 @@ RSpec.describe GoldMiner::Slack::Client do
         messages = slack.search_interesting_messages_in("dev")
 
         expect(messages).to match_array [
-          GoldMiner::Slack::Message.new(text: "TIL", author: "User", permalink: "https:///message-1-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "Ruby tip/TIL: Array#sample...", author: "User 2", permalink: "https:///message-2-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "Ruby tip: have fun!", author: "User 2", permalink: "https:///message-3-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "CSS clamp() is so cool!", author: "User 3", permalink: "https:///message-4-permalink.com")
+          GoldMiner::Slack::Message.new(text: "TIL", author: user1, permalink: "https:///message-1-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "Ruby tip/TIL: Array#sample...", author: user2, permalink: "https:///message-2-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "Ruby tip: have fun!", author: user2, permalink: "https:///message-3-permalink.com"),
+          GoldMiner::Slack::Message.new(text: "CSS clamp() is so cool!", author: user3, permalink: "https:///message-4-permalink.com")
         ]
       end
     end
@@ -125,6 +129,8 @@ RSpec.describe GoldMiner::Slack::Client do
     it "warns when results have multiple pages" do
       travel_to "2022-10-07" do
         token = "valid-token"
+        user1 = GoldMiner::Slack::User.new(id: "user-id-1", name: "User 1", username: "username-1")
+        user2 = GoldMiner::Slack::User.new(id: "user-id-2", name: "User 2", username: "username-2")
         stub_slack_auth_test_request(status: 200, token: token)
         stub_slack_message_search_request(
           query: "TIL in:dev after:2022-09-30",
@@ -132,8 +138,8 @@ RSpec.describe GoldMiner::Slack::Client do
             "ok" => true,
             "messages" => {
               "matches" => [
-                {"text" => "TIL", "user" => "user-id", "permalink" => "https:///message-1-permalink.com"},
-                {"text" => "Ruby tip/TIL: Array#sample...", "user" => "user2-id", "permalink" => "https:///message-2-permalink.com"}
+                {"text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"},
+                {"text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
               ],
               "paging" => {"pages" => 2}
             }
@@ -161,13 +167,13 @@ RSpec.describe GoldMiner::Slack::Client do
         )
         stub_slack_users_info_request(
           token: token,
-          user_id: "user-id",
-          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User"}}}
+          user_id: user1.id,
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => user1.name}}}
         )
         stub_slack_users_info_request(
           token: token,
-          user_id: "user2-id",
-          body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 2"}}}
+          user_id: user2.id,
+          body: {"ok" => true, "user" => {"profile" => {"real_name" => user2.name}}}
         )
         slack = GoldMiner::Slack::Client.build(api_token: token).value!
 

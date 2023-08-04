@@ -63,14 +63,18 @@ module GoldMiner
       result.messages.matches.map do |match|
         Slack::Message.new(
           text: match.text,
-          author: fetch_author_name(match.user),
+          author: fetch_author(match),
           permalink: match.permalink
         )
       end
     end
 
-    def fetch_author_name(user_id)
-      @slack.users_info(user: user_id).user.profile.real_name
+    def fetch_author(message)
+      Slack::User.new(
+        id: message.user,
+        name: @slack.users_info(user: message.user).user.profile.real_name,
+        username: message.username
+      )
     end
 
     # For simplicity, I'm not handling API pagination yet
