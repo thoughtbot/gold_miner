@@ -23,6 +23,7 @@ module GoldMiner
           teaser: >
             Highlights of what happened in our ##{@slack_channel} channel on Slack this week.
           author: Matheus Richard
+          auto_social_share: true
           ---
 
           Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
