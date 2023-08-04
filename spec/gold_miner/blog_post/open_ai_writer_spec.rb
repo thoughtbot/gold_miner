@@ -324,7 +324,8 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   private
 
   def create_message
-    GoldMiner::Slack::Message.new(text: "Some text", author: "Some author", permalink: "https://example.com/123")
+    author = GoldMiner::Slack::User.new(id: "U123", name: "Some author", username: "some.user")
+    GoldMiner::Slack::Message.new(text: "Some text", author: author, permalink: "https://example.com/123")
   end
 
   def stub_open_ai_error(token:, prompt:, response_error:)

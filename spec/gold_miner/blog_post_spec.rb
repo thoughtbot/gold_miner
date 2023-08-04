@@ -6,10 +6,12 @@ RSpec.describe GoldMiner::BlogPost do
   describe "#to_s" do
     it "creates a blogpost from a list of messages" do
       travel_to "2022-10-07" do
+        author1 = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "john.doe")
+        author2 = GoldMiner::Slack::User.new(id: "U456", name: "Jane Smith", username: "jane.smith")
         messages = [
-          GoldMiner::Slack::Message.new(text: "TIL 1", author: "John Doe", permalink: "http://permalink-1.com"),
-          GoldMiner::Slack::Message.new(text: "TIL 2", author: "Jane Smith", permalink: "http://permalink-2.com"),
-          GoldMiner::Slack::Message.new(text: "Tip 1", author: "John Doe", permalink: "http://permalink-3.com")
+          GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
+          GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com"),
+          GoldMiner::Slack::Message.new(text: "Tip 1", author: author1, permalink: "http://permalink-3.com")
         ]
         blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: messages, since: "2022-09-30")
 
@@ -72,9 +74,11 @@ RSpec.describe GoldMiner::BlogPost do
           "test"
         end
       end
+      author1 = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "john.doe")
+      author2 = GoldMiner::Slack::User.new(id: "U456", name: "Jane Smith", username: "jane.smith")
       messages = [
-        GoldMiner::Slack::Message.new(text: "TIL 1", author: "John Doe", permalink: "http://permalink-1.com"),
-        GoldMiner::Slack::Message.new(text: "TIL 2", author: "Jane Smith", permalink: "http://permalink-2.com")
+        GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
+        GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com")
       ]
       seconds_of_sleep = 1
       blogpost = GoldMiner::BlogPost.new(
