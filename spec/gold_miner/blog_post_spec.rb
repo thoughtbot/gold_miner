@@ -24,9 +24,9 @@ RSpec.describe GoldMiner::BlogPost do
           author: Matheus Richard
           ---
 
-          Welcome to another edition of This Week in #dev, a series of posts where we
-          bring some of the most interesting Slack conversations to the public.
-          Today we're talking about: TIL and Tip.
+          Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
+          a series of posts where we bring some of the most interesting Slack
+          conversations to the public.
 
           ## http://permalink-1.com
 
@@ -42,7 +42,7 @@ RSpec.describe GoldMiner::BlogPost do
 
           ## Thanks
 
-          This edition was brought to you by: Jane Smith and John Doe. Thanks to all contributors! 🎉
+          This edition was brought to you by Jane Smith and John Doe. Thanks to all contributors! 🎉
         MARKDOWN
       end
     end
@@ -97,9 +97,9 @@ RSpec.describe GoldMiner::BlogPost do
         author: Matheus Richard
         ---
 
-        Welcome to another edition of This Week in #dev, a series of posts where we
-        bring some of the most interesting Slack conversations to the public.
-        Today we're talking about: test and test2.
+        Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
+        a series of posts where we bring some of the most interesting Slack
+        conversations to the public.
 
         ## test
 
@@ -111,7 +111,7 @@ RSpec.describe GoldMiner::BlogPost do
 
         ## Thanks
 
-        This edition was brought to you by: Jane Smith and John Doe. Thanks to all contributors! 🎉
+        This edition was brought to you by Jane Smith and John Doe. Thanks to all contributors! 🎉
       MARKDOWN
     end
   end

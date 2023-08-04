@@ -25,15 +25,15 @@ module GoldMiner
           author: Matheus Richard
           ---
 
-          Welcome to another edition of This Week in #dev, a series of posts where we
-          bring some of the most interesting Slack conversations to the public.
-          Today we're talking about: #{topics_sentence}.
+          Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
+          a series of posts where we bring some of the most interesting Slack
+          conversations to the public.
 
           #{highlights_task.wait}
 
           ## Thanks
 
-          This edition was brought to you by: #{authors}. Thanks to all contributors! 🎉
+          This edition was brought to you by #{authors}. Thanks to all contributors! 🎉
         MARKDOWN
       end
     end
@@ -72,10 +72,6 @@ module GoldMiner
       start_date = Helpers::Time.pretty_date(Date.parse(@since))
 
       "(#{start_date})"
-    end
-
-    def topics_sentence
-      Helpers::Sentence.from(topics)
     end
 
     def topic_tags
