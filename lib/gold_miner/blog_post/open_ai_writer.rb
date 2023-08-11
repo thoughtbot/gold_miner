@@ -28,7 +28,12 @@ module GoldMiner
       end
 
       def summarize(message)
-        summary = ask_openai("Summarize this text:\n\n#{message.as_conversation}")
+        summary = ask_openai <<~PROMPT
+          Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.
+
+          Message:
+          #{message.as_conversation}
+        PROMPT
 
         if summary
           "#{summary}\n\nSource: #{message[:permalink]}"
@@ -40,11 +45,10 @@ module GoldMiner
       private
 
       def ask_openai(prompt)
-        response = @openai_client.completions(
+        response = @openai_client.chat(
           parameters: {
-            model: "text-davinci-003",
-            prompt: prompt,
-            max_tokens: 1000,
+            model: "gpt-3.5-turbo",
+            messages: [{role: "user", content: prompt.strip}],
             temperature: 0
           }
         )
@@ -54,7 +58,7 @@ module GoldMiner
           return
         end
 
-        response["choices"].first["text"].strip
+        response.dig("choices", 0, "message", "content").strip
       rescue SocketError
         nil
       end
