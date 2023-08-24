@@ -6,8 +6,8 @@ RSpec.describe GoldMiner::BlogPost do
   describe "#to_s" do
     it "creates a blogpost from a list of messages" do
       travel_to "2022-10-07" do
-        author1 = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "john.doe")
-        author2 = GoldMiner::Slack::User.new(id: "U456", name: "Jane Smith", username: "jane.smith")
+        author1 = TestFactories.create_slack_user(id: "U123", name: "John Doe", username: "john.doe", link: "https://example.com/john.doe")
+        author2 = TestFactories.create_slack_user(id: "U456", name: "Jane Smith", username: "jane.smith", link: "https://example.com/jane.smith")
         messages = [
           GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
           GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com"),
@@ -45,7 +45,7 @@ RSpec.describe GoldMiner::BlogPost do
 
           ## Thanks
 
-          This edition was brought to you by Jane Smith and John Doe. Thanks to all contributors! 🎉
+          This edition was brought to you by [Jane Smith][jane.smith] and [John Doe][john.doe]. Thanks to all contributors! 🎉
         MARKDOWN
       end
     end
@@ -74,8 +74,8 @@ RSpec.describe GoldMiner::BlogPost do
           "test"
         end
       end
-      author1 = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "john.doe")
-      author2 = GoldMiner::Slack::User.new(id: "U456", name: "Jane Smith", username: "jane.smith")
+      author1 = TestFactories.create_slack_user(id: "U123", name: "John Doe", username: "john.doe", link: "https://example.com/john.doe")
+      author2 = TestFactories.create_slack_user(id: "U456", name: "Jane Smith", username: "jane.smith", link: "https://example.com/jane.smith")
       messages = [
         GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
         GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com")
@@ -117,7 +117,7 @@ RSpec.describe GoldMiner::BlogPost do
 
         ## Thanks
 
-        This edition was brought to you by Jane Smith and John Doe. Thanks to all contributors! 🎉
+        This edition was brought to you by [Jane Smith][jane.smith] and [John Doe][john.doe]. Thanks to all contributors! 🎉
       MARKDOWN
     end
   end

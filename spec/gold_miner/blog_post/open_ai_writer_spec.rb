@@ -206,7 +206,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       request = stub_open_ai_request(
         token: token,
         prompt:
-          "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\\n\\nMessage:\\n#{message.as_conversation}",
+          "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
         response_status: 200,
         response_body: {
           "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_summary}}]
@@ -231,7 +231,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         request = stub_open_ai_error(
           token: token,
           prompt:
-            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\\n\\nMessage:\\n#{message.as_conversation}",
+            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
           response_error: open_ai_error
         )
         writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
@@ -248,7 +248,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         request = stub_open_ai_error(
           token: token,
           prompt:
-            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\\n\\nMessage:\\n#{message.as_conversation}",
+            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
           response_error: "Some error"
         )
         fallback_summary = "[TODO]"
@@ -285,7 +285,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   def stub_open_ai_request(token:, prompt:, response_body:, response_status:)
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .with(
-        body: %({"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"#{prompt}"}],"temperature":0}),
+        body: %({"model":"gpt-3.5-turbo","messages":[{"role":"user","content":#{prompt.strip.dump}}],"temperature":0}),
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",

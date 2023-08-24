@@ -6,7 +6,7 @@ require "ostruct"
 RSpec.describe GoldMiner::Slack::Message do
   describe "#[]" do
     it "returns the message attribute" do
-      author = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "johndoe")
+      author = TestFactories.create_slack_user
       message = described_class.new(
         text: "TIL",
         author: author,
@@ -20,8 +20,8 @@ RSpec.describe GoldMiner::Slack::Message do
   end
 
   describe "#as_conversation" do
-    it "returns the message content with the author name" do
-      author = GoldMiner::Slack::User.new(id: "U123", name: "John Doe", username: "johndoe")
+    it "returns the message content with the author name and link" do
+      author = TestFactories.create_slack_user(name: "Matz", username: "the-ruby-matz", link: "https://example.com/matz")
       message = described_class.new(
         text: "TIL",
         author: author,
@@ -30,7 +30,11 @@ RSpec.describe GoldMiner::Slack::Message do
 
       conversation = message.as_conversation
 
-      expect(conversation).to eq "John Doe says: TIL"
+      expect(conversation).to eq <<~MARKDOWN
+        [Matz][the-ruby-matz] says: TIL
+
+        [the-ruby-matz]: https://example.com/matz
+      MARKDOWN
     end
   end
 end

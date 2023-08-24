@@ -49,9 +49,9 @@ RSpec.describe GoldMiner::Slack::Client do
     it "returns uniq interesting messages sent on dev channel since last friday" do
       travel_to "2022-10-07" do
         token = "valid-token"
-        user1 = GoldMiner::Slack::User.new(id: "user-id-1", name: "User 1", username: "username-1")
-        user2 = GoldMiner::Slack::User.new(id: "user-id-2", name: "User 2", username: "username-2")
-        user3 = GoldMiner::Slack::User.new(id: "user-id-3", name: "User 3", username: "username-3")
+        user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
+        user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
+        user3 = TestFactories.create_slack_user(id: "user-id-3", name: "User 3", username: "username-3")
 
         stub_slack_auth_test_request(status: 200, token: token)
         stub_slack_message_search_request(
@@ -113,7 +113,12 @@ RSpec.describe GoldMiner::Slack::Client do
           user_id: "user4-id",
           body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 4"}}}
         )
-        slack = GoldMiner::Slack::Client.build(api_token: token).value!
+        author_config = GoldMiner::AuthorConfig.new({
+          user1.username => user1.link,
+          user2.username => user2.link,
+          user3.username => user3.link
+        })
+        slack = GoldMiner::Slack::Client.build(api_token: token, author_config:).value!
 
         messages = slack.search_interesting_messages_in("dev")
 
@@ -129,8 +134,8 @@ RSpec.describe GoldMiner::Slack::Client do
     it "warns when results have multiple pages" do
       travel_to "2022-10-07" do
         token = "valid-token"
-        user1 = GoldMiner::Slack::User.new(id: "user-id-1", name: "User 1", username: "username-1")
-        user2 = GoldMiner::Slack::User.new(id: "user-id-2", name: "User 2", username: "username-2")
+        user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
+        user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
         stub_slack_auth_test_request(status: 200, token: token)
         stub_slack_message_search_request(
           query: "TIL in:dev after:2022-09-30",
@@ -175,7 +180,10 @@ RSpec.describe GoldMiner::Slack::Client do
           user_id: user2.id,
           body: {"ok" => true, "user" => {"profile" => {"real_name" => user2.name}}}
         )
-        slack = GoldMiner::Slack::Client.build(api_token: token).value!
+        author_config = GoldMiner::AuthorConfig.new({
+          user1.username => user1.link
+        })
+        slack = GoldMiner::Slack::Client.build(api_token: token, author_config: author_config).value!
 
         expect {
           slack.search_interesting_messages_in("dev")
