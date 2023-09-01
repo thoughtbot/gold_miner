@@ -114,9 +114,9 @@ RSpec.describe GoldMiner::Slack::Client do
           body: {"ok" => true, "user" => {"profile" => {"real_name" => "User 4"}}}
         )
         author_config = GoldMiner::AuthorConfig.new({
-          user1.username => user1.link,
-          user2.username => user2.link,
-          user3.username => user3.link
+          user1.username => {"link" => user1.link},
+          user2.username => {"link" => user2.link},
+          user3.username => {"link" => user3.link}
         })
         slack = GoldMiner::Slack::Client.build(api_token: token, author_config:).value!
 
@@ -181,7 +181,7 @@ RSpec.describe GoldMiner::Slack::Client do
           body: {"ok" => true, "user" => {"profile" => {"real_name" => user2.name}}}
         )
         author_config = GoldMiner::AuthorConfig.new({
-          user1.username => user1.link
+          user1.username => {"link" => user1.link}
         })
         slack = GoldMiner::Slack::Client.build(api_token: token, author_config: author_config).value!
 

@@ -8,7 +8,6 @@ module GoldMiner
     def self.default
       YAML
         .load_file(DEFAULT_CONFIG_PATH)
-        .transform_values { |author| author["link"] }
         .then { |links| new(links) }
     end
 
@@ -17,7 +16,7 @@ module GoldMiner
     end
 
     def link_for(slack_username)
-      @author_config.fetch(slack_username, DEFAULT_AUTHOR_LINK)
+      @author_config.dig(slack_username, "link") || DEFAULT_AUTHOR_LINK
     end
   end
 end

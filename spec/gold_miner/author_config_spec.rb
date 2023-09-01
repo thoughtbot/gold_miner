@@ -17,12 +17,13 @@ RSpec.describe GoldMiner::AuthorConfig do
     it "returns the preferred link for the given author username" do
       matz = "matz"
       matz_link = "https://example.com/matz"
-      author_config = described_class.new({matz => matz_link})
+      author_config = described_class.new({matz => {"link" => matz_link}})
 
       link = author_config.link_for(matz)
 
       expect(link).to eq(matz_link)
     end
+
     context "when author has not a preferred link" do
       it "returns a todo link" do
         author_config = described_class.new({})
