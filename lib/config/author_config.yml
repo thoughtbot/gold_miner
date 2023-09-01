@@ -1,6 +1,9 @@
 aji:
   link: https://thoughtbot.com/blog/authors/aji-slater
 
+csara:
+  link: https://thoughtbot.com/blog/authors/sara-jackson
+
 dimiter:
   link: https://thoughtbot.com/blog/authors/dimiter-petrov
 
@@ -24,9 +27,6 @@ neilson:
 
 remy:
   link: https://thoughtbot.com/blog/authors/remy-hannequin
-
-csara:
-  link: https://thoughtbot.com/blog/authors/sara-jackson
 
 seanpdoyle:
   link: https://thoughtbot.com/blog/authors/sean-doyle
