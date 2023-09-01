@@ -92,7 +92,7 @@ module GoldMiner
 
     def authors
       @messages
-        .map { |message| message[:author].name }
+        .map { |message| message.author.name_with_link_reference }
         .uniq
         .sort
         .then { |authors| Helpers::Sentence.from(authors) }

@@ -2,7 +2,7 @@
 
 require "dotenv"
 require "zeitwerk"
-require "ruby/openai"
+require "openai"
 
 Zeitwerk::Loader.for_gem.setup
 

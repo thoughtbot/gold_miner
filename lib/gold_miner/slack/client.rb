@@ -9,8 +9,8 @@ module GoldMiner
 
     extend Dry::Monads[:result]
 
-    def self.build(api_token:, slack_client: ::Slack::Web::Client)
-      client = new(api_token, slack_client)
+    def self.build(api_token:, slack_client: ::Slack::Web::Client, author_config: AuthorConfig.default)
+      client = new(api_token, slack_client, author_config)
 
       begin
         client.auth_test
@@ -23,8 +23,9 @@ module GoldMiner
       end
     end
 
-    def initialize(api_token, slack_client)
+    def initialize(api_token, slack_client, author_config)
       @slack = slack_client.new(token: api_token)
+      @author_config = author_config
     end
 
     def auth_test
@@ -63,18 +64,23 @@ module GoldMiner
       result.messages.matches.map do |match|
         Slack::Message.new(
           text: match.text,
-          author: fetch_author(match),
+          author: build_author(match),
           permalink: match.permalink
         )
       end
     end
 
-    def fetch_author(message)
+    def build_author(message)
       Slack::User.new(
         id: message.user,
-        name: @slack.users_info(user: message.user).user.profile.real_name,
-        username: message.username
+        name: fetch_author(message.user),
+        username: message.username,
+        link: @author_config.link_for(message.username)
       )
+    end
+
+    def fetch_author(user_id)
+      @slack.users_info(user: user_id).user.profile.real_name
     end
 
     # For simplicity, I'm not handling API pagination yet

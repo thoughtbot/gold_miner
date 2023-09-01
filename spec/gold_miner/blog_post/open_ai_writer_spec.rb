@@ -16,26 +16,14 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     it "returns a list of topics from the message text" do
       token = "valid-token"
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
-      message = create_message
+      message = TestFactories.create_slack_message
       open_ai_topics = ["Ruby", "Enumerable"]
       request = stub_open_ai_request(
         token: token,
         prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
         response_status: 200,
         response_body: {
-          "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
-          "object" => "text_completion",
-          "created" => 1671825952,
-          "model" => "text-davinci-003",
-          "choices" => [
-            {
-              "text" => open_ai_topics.to_json,
-              "index" => 0,
-              "logprobs" => nil,
-              "finish_reason" => "stop"
-            }
-          ],
-          "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+          "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_topics.to_json}}]
         }
       )
 
@@ -48,26 +36,14 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "when OpenAI returns a JSON wrapped in backticks" do
       it "removes the backticks and parses the JSON" do
         token = "valid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         json = '`["Ruby"]`'
         request = stub_open_ai_request(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
           response_status: 200,
           response_body: {
-            "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
-            "object" => "text_completion",
-            "created" => 1671825952,
-            "model" => "text-davinci-003",
-            "choices" => [
-              {
-                "text" => json,
-                "index" => 0,
-                "logprobs" => nil,
-                "finish_reason" => "stop"
-              }
-            ],
-            "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+            "choices" => [{"message" => {"role" => "assistant", "content" => json}}]
           }
         )
         writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
@@ -82,26 +58,14 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "when OpenAI returns an invalid JSON" do
       it "uses the fallback writer" do
         token = "valid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         invalid_json = '{"Ruby"}'
         request = stub_open_ai_request(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
           response_status: 200,
           response_body: {
-            "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
-            "object" => "text_completion",
-            "created" => 1671825952,
-            "model" => "text-davinci-003",
-            "choices" => [
-              {
-                "text" => invalid_json,
-                "index" => 0,
-                "logprobs" => nil,
-                "finish_reason" => "stop"
-              }
-            ],
-            "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+            "choices" => [{"message" => {"role" => "assistant", "content" => invalid_json}}]
           }
         )
         fallback_topics = ["Ruby"]
@@ -119,7 +83,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
@@ -136,7 +100,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to extract topics" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         request = stub_open_ai_error(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{message[:text]}",
@@ -157,10 +121,10 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "when an SocketError is raised" do
       it "uses the fallback writer" do
         mock_client_instance = instance_double(OpenAI::Client)
-        allow(mock_client_instance).to receive(:completions).and_raise(SocketError)
+        allow(mock_client_instance).to receive(:chat).and_raise(SocketError)
         mock_client_class = class_double(OpenAI::Client, new: mock_client_instance)
         token = "valid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         fallback_topics = ["Ruby"]
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
@@ -177,26 +141,14 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     it "returns the message permalink" do
       token = "valid-token"
       writer = described_class.new(open_ai_api_token: token, fallback_writer: double("fallback_writer"))
-      message = create_message
+      message = TestFactories.create_slack_message
       open_ai_title = "\n\n\"The Power of Enumerable#each_with_object\""
       request = stub_open_ai_request(
         token: token,
         prompt: "Give a small title to this text: #{message[:text]}",
         response_status: 200,
         response_body: {
-          "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
-          "object" => "text_completion",
-          "created" => 1671825952,
-          "model" => "text-davinci-003",
-          "choices" => [
-            {
-              "text" => open_ai_title,
-              "index" => 0,
-              "logprobs" => nil,
-              "finish_reason" => "stop"
-            }
-          ],
-          "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+          "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_title}}]
         }
       )
 
@@ -210,7 +162,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
@@ -227,7 +179,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to return a title" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         request = stub_open_ai_error(
           token: token,
           prompt: "Give a small title to this text: #{message[:text]}",
@@ -249,26 +201,15 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   describe "#summarize" do
     it "returns a summary of the given text" do
       token = "valid-token"
-      message = create_message
+      message = TestFactories.create_slack_message
       open_ai_summary = "\n\nEnumerable#each_with_object is like #reduce, but easier to understand."
       request = stub_open_ai_request(
         token: token,
-        prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
+        prompt:
+          "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
         response_status: 200,
         response_body: {
-          "id" => "cmpl-6QiaeoGrqfvf3dFdxHbzDRAGrUBho",
-          "object" => "text_completion",
-          "created" => 1671825952,
-          "model" => "text-davinci-003",
-          "choices" => [
-            {
-              "text" => open_ai_summary,
-              "index" => 0,
-              "logprobs" => nil,
-              "finish_reason" => "stop"
-            }
-          ],
-          "usage" => {"prompt_tokens" => 21, "completion_tokens" => 15, "total_tokens" => 36}
+          "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_summary}}]
         }
       )
       writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
@@ -285,11 +226,12 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         open_ai_error = "Incorrect API key provided: #{token}. You can find your API key at https://beta.openai.com."
         request = stub_open_ai_error(
           token: token,
-          prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
+          prompt:
+            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
           response_error: open_ai_error
         )
         writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
@@ -302,10 +244,11 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
 
       it "uses the fallback writer to return a summary" do
         token = "invalid-token"
-        message = create_message
+        message = TestFactories.create_slack_message
         request = stub_open_ai_error(
           token: token,
-          prompt: "Summarize this text:\\n\\n#{message.as_conversation}",
+          prompt:
+            "Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.\n\nMessage:\n#{message.as_conversation}",
           response_error: "Some error"
         )
         fallback_summary = "[TODO]"
@@ -322,11 +265,6 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   end
 
   private
-
-  def create_message
-    author = GoldMiner::Slack::User.new(id: "U123", name: "Some author", username: "some.user")
-    GoldMiner::Slack::Message.new(text: "Some text", author: author, permalink: "https://example.com/123")
-  end
 
   def stub_open_ai_error(token:, prompt:, response_error:)
     stub_open_ai_request(
@@ -345,9 +283,9 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   end
 
   def stub_open_ai_request(token:, prompt:, response_body:, response_status:)
-    stub_request(:post, "https://api.openai.com/v1/completions")
+    stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .with(
-        body: %({"model":"text-davinci-003","prompt":"#{prompt}","max_tokens":1000,"temperature":0}),
+        body: %({"model":"gpt-3.5-turbo","messages":[{"role":"user","content":#{prompt.strip.dump}}],"temperature":0}),
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
