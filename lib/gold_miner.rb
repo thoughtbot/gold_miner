@@ -22,20 +22,7 @@ module GoldMiner
       slack_channel: channel,
       messages: messages,
       since: Helpers::Time.last_friday,
-      writer: blog_post_writer
+      writer: BlogPost::Writer.from_env
     )
-  end
-
-  private
-
-  def blog_post_writer
-    if ENV["OPEN_AI_API_TOKEN"]
-      GoldMiner::BlogPost::OpenAiWriter.new(
-        open_ai_api_token: ENV["OPEN_AI_API_TOKEN"],
-        fallback_writer: GoldMiner::BlogPost::SimpleWriter.new
-      )
-    else
-      GoldMiner::BlogPost::SimpleWriter.new
-    end
   end
 end

@@ -80,15 +80,4 @@ RSpec.describe GoldMiner do
   it "has a version number" do
     expect(GoldMiner::VERSION).not_to be nil
   end
-
-  private
-
-  def with_env(env)
-    original_env = ENV.to_hash
-    ENV.update(env)
-
-    yield
-  ensure
-    ENV.replace(original_env)
-  end
 end
