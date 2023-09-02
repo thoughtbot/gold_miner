@@ -27,7 +27,7 @@ module GoldMiner
           ---
 
           Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
-          a series of posts where we bring some of the most interesting Slack
+          a series of posts where we bring some of our most interesting Slack
           conversations to the public.
 
           #{highlights_task.wait}

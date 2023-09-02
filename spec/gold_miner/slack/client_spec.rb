@@ -190,6 +190,28 @@ RSpec.describe GoldMiner::Slack::Client do
         }.to output("[WARNING] Found more than one page of results, only the first page will be processed\n").to_stderr
       end
     end
+
+    it "searches messages asynchronously" do
+      seconds_of_sleep = 1
+      mock_client = double("Sleepy Slack Client")
+      allow(mock_client).to receive(:auth_test).and_return(status: 200)
+      allow(mock_client).to receive(:search_messages) {
+        sleep seconds_of_sleep
+
+        double("Slack Search", messages: double("Slack Messages", matches: [], paging: double("Slack Paging", pages: 1)))
+      }
+      mock_client_class = double("Sleepy Slack Client Class", new: mock_client)
+
+      slack = GoldMiner::Slack::Client.build(api_token: "a-token", slack_client: mock_client_class).value!
+
+      t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      messages = slack.search_interesting_messages_in("dev")
+      elapsed_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
+
+      overhead = 0.5
+      expect(elapsed_time).to be_between(seconds_of_sleep, seconds_of_sleep + overhead)
+      expect(messages).to eq []
+    end
   end
 
   private

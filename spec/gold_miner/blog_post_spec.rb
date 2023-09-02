@@ -28,7 +28,7 @@ RSpec.describe GoldMiner::BlogPost do
           ---
 
           Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
-          a series of posts where we bring some of the most interesting Slack
+          a series of posts where we bring some of our most interesting Slack
           conversations to the public.
 
           ## http://permalink-1.com
@@ -88,11 +88,12 @@ RSpec.describe GoldMiner::BlogPost do
         writer: sleep_writer.new(seconds_of_sleep: seconds_of_sleep)
       )
 
-      t0 = Time.now
+      t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       result = blogpost.to_s
-      elapsed_time = Time.now - t0
+      elapsed_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
-      expect(elapsed_time).to be_between(seconds_of_sleep, seconds_of_sleep + 1)
+      overhead = 0.5
+      expect(elapsed_time).to be_between(seconds_of_sleep, seconds_of_sleep + overhead)
       expect(result).to eq <<~MARKDOWN
         ---
         title: "This week in #design (Sep 30, 2022)"
@@ -104,7 +105,7 @@ RSpec.describe GoldMiner::BlogPost do
         ---
 
         Welcome to another edition of [This Week in #dev](https://thoughtbot.com/blog/tags/this-week-in-dev),
-        a series of posts where we bring some of the most interesting Slack
+        a series of posts where we bring some of our most interesting Slack
         conversations to the public.
 
         ## test
