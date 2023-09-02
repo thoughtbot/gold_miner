@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "dry/monads"
+require "async"
 require "slack-ruby-client"
 
 module GoldMiner
@@ -34,17 +35,27 @@ module GoldMiner
 
     def search_interesting_messages_in(channel)
       interesting_messages = interesting_messages_query(channel)
-      til_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_topic("TIL"))
-      )
-      tip_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_topic("tip"))
-      )
-      golden_messages = extract_messages_from_result(
-        @slack.search_messages(query: interesting_messages.with_reaction(GOLD_EMOJI))
-      )
+      Sync do
+        til_messages_task = Async do
+          extract_messages_from_result(
+            @slack.search_messages(query: interesting_messages.with_topic("TIL"))
+          )
+        end
+        tip_messages_task = Async do
+          extract_messages_from_result(
+            @slack.search_messages(query: interesting_messages.with_topic("tip"))
+          )
+        end
+        golden_messages_task = Async do
+          extract_messages_from_result(
+            @slack.search_messages(query: interesting_messages.with_reaction(GOLD_EMOJI))
+          )
+        end
 
-      (til_messages + tip_messages + golden_messages).uniq { |message| message[:permalink] }
+        [til_messages_task, tip_messages_task, golden_messages_task]
+          .flat_map(&:wait)
+          .uniq { |message| message[:permalink] }
+      end
     end
 
     private_class_method :new
