@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe GoldMiner::TopicExtractor do
+RSpec.describe GoldMiner::BlogPost::SimpleWriter::TopicExtractor do
   describe "#call" do
     it "extracts topics from a message text" do
       message = <<~MARKDOWN
