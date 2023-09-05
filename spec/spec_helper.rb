@@ -26,3 +26,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+def deep_open_struct(hash)
+  require "ostruct"
+
+  JSON.parse hash.to_json, object_class: OpenStruct
+end
