@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "ostruct"
 
 RSpec.describe GoldMiner::Slack::Message do
   describe "#[]" do
