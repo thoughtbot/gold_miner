@@ -17,10 +17,6 @@ module GoldMiner
       with(start_date: new_start_date)
     end
 
-    def sent_after_last_friday
-      sent_after(Helpers::Time.last_friday)
-    end
-
     def with_topic(new_topic)
       with(topic: new_topic)
     end

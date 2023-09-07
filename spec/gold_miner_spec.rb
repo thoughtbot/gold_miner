@@ -15,13 +15,28 @@ RSpec.describe GoldMiner do
     end
 
     it "returns interesting messages from the given channel" do
-      messages = {text: "text", author_username: "user1", permalink: "http://permalink-1.com"}
-      slack_client = instance_double(GoldMiner::Slack::Client, search_interesting_messages_in: messages)
+      message_author = TestFactories.create_slack_user(link: "#to-do")
+      slack_message = TestFactories.create_slack_message(author: message_author)
+      search_result = deep_open_struct({
+        messages: {
+          matches: [
+            {
+              text: slack_message.text,
+              user: message_author.id,
+              username: message_author.username,
+              author_real_name: message_author.name,
+              permalink: slack_message.permalink
+            }
+          ]
+        }
+      })
+
+      slack_client = instance_double(GoldMiner::Slack::Client, search_messages: search_result)
       slack_client_builder = double(GoldMiner::Slack::Client, build: Success(slack_client))
 
       result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 
-      expect(result.value!).to eq messages
+      expect(result.value!).to eq [slack_message]
     end
   end
 
