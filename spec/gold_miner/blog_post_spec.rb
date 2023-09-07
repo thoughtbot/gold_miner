@@ -80,7 +80,7 @@ RSpec.describe GoldMiner::BlogPost do
         GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
         GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com")
       ]
-      seconds_of_sleep = 1
+      seconds_of_sleep = 0.5
       blogpost = GoldMiner::BlogPost.new(
         slack_channel: "design",
         messages: messages,
@@ -92,7 +92,7 @@ RSpec.describe GoldMiner::BlogPost do
       result = blogpost.to_s
       elapsed_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - t0
 
-      overhead = 0.5
+      overhead = 0.1
       expect(elapsed_time).to be_between(seconds_of_sleep, seconds_of_sleep + overhead)
       expect(result).to eq <<~MARKDOWN
         ---
