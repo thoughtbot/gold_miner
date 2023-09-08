@@ -5,8 +5,6 @@ require "slack-ruby-client"
 
 module GoldMiner
   class Slack::Client
-    GOLD_EMOJI = "rupee-gold"
-
     extend Dry::Monads[:result]
 
     def self.build(api_token:, slack_client: ::Slack::Web::Client)
