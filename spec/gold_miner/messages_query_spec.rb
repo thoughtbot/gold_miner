@@ -2,10 +2,10 @@
 
 require "spec_helper"
 
-RSpec.describe GoldMiner::MessagesQuery do
+RSpec.describe GoldMiner::Slack::MessagesQuery do
   describe "#on_channel" do
     it "sets the channel to search messages in" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query.on_channel("dev")
 
@@ -15,7 +15,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
   describe "#sent_after" do
     it "sets the start date to search messages" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query.sent_after("2018-01-01")
 
@@ -25,7 +25,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
   describe "#with_reaction" do
     it "sets the query reaction to search messages" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query.with_reaction("thumbsup")
 
@@ -35,7 +35,7 @@ RSpec.describe GoldMiner::MessagesQuery do
 
   describe "#with_topic" do
     it "sets the query topic to TIL messages" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query.with_topic("TIL")
 
@@ -43,41 +43,9 @@ RSpec.describe GoldMiner::MessagesQuery do
     end
   end
 
-  describe "#sent_after_last_friday" do
-    it "sets the start date to the last Friday", :aggregate_failures do
-      a_thursday = "2022-10-06"
-      a_friday = "2022-10-07"
-      a_saturday = "2022-10-08"
-
-      travel_to a_thursday do
-        query = GoldMiner::MessagesQuery.new
-
-        result = query.sent_after_last_friday
-
-        expect(result.start_date).to eq("2022-09-30")
-      end
-
-      travel_to a_friday do
-        query = GoldMiner::MessagesQuery.new
-
-        result = query.sent_after_last_friday
-
-        expect(result.start_date).to eq("2022-09-30") # a week before, not today
-      end
-
-      travel_to a_saturday do
-        query = GoldMiner::MessagesQuery.new
-
-        result = query.sent_after_last_friday
-
-        expect(result.start_date).to eq("2022-10-07") # the day before
-      end
-    end
-  end
-
   describe "#to_s" do
     it "returns the string representation of the query" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query
         .with_topic("TIL")
@@ -90,7 +58,7 @@ RSpec.describe GoldMiner::MessagesQuery do
     end
 
     it "does not include unset options" do
-      query = GoldMiner::MessagesQuery.new
+      query = described_class.new
 
       result = query.to_s
 
