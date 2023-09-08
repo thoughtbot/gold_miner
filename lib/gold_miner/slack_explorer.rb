@@ -22,7 +22,7 @@ module GoldMiner
     private
 
     def interesting_messages_query(channel, start_on)
-      MessagesQuery
+      Slack::MessagesQuery
         .new
         .on_channel(channel)
         .sent_after(Date.parse(start_on.to_s))
