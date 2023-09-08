@@ -156,6 +156,9 @@ RSpec.describe GoldMiner::Slack::Client do
       # to sum them twice.
       overhead = 0.1
       expect(total_elapsed_time).to be_within(overhead).of(search_query_time + user_info_query_time)
+      expect(sleepy_slack_client).to have_received(:search_messages).with({query: search_query}).once
+      expect(sleepy_slack_client).to have_received(:users_info).with({user: user1.id}).once
+      expect(sleepy_slack_client).to have_received(:users_info).with({user: user2.id}).once
     end
 
     it "warns when results have multiple pages" do
