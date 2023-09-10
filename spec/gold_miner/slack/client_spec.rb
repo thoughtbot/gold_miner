@@ -76,11 +76,11 @@ RSpec.describe GoldMiner::Slack::Client do
       )
       slack = described_class.build(api_token: token).value!
 
-      messages = slack.search_messages(search_query).messages.matches
+      messages = slack.search_messages(search_query)
 
       expect(messages).to match_array [
-        msg1.merge("author_real_name" => user1.name),
-        msg2.merge("author_real_name" => user2.name)
+        TestFactories.create_slack_message(id: msg1["id"], text: msg1["text"], user: user1, permalink: msg1["permalink"]),
+        TestFactories.create_slack_message(id: msg2["id"], text: msg2["text"], user: user2, permalink: msg2["permalink"])
       ]
     end
 
@@ -108,7 +108,7 @@ RSpec.describe GoldMiner::Slack::Client do
       )
       slack = described_class.build(api_token: token).value!
 
-      slack.search_messages(search_query).messages.matches
+      slack.search_messages(search_query)
 
       expect(WebMock).to have_requested(:post, "https://slack.com/api/users.info").once
     end
