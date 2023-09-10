@@ -71,7 +71,6 @@ module GoldMiner
           .user
           .profile
           .real_name
-      # .tap { |name| @user_name_cache[user_id] = name }
     end
 
     def user_info(user_id)
