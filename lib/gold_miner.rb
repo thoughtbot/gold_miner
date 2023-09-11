@@ -16,10 +16,10 @@ module GoldMiner
       .fmap { |client| explore(slack_channel, client) }
   end
 
-  def convert_messages_to_blogpost(channel, messages, blog_post_builder: GoldMiner::BlogPost)
+  def convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: GoldMiner::BlogPost)
     blog_post_builder.new(
       slack_channel: channel,
-      messages: messages,
+      messages: gold_nuggets,
       since: Helpers::Time.last_friday,
       writer: BlogPost::Writer.from_env
     )
