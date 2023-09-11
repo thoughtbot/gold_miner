@@ -7,80 +7,53 @@ RSpec.describe GoldMiner::SlackExplorer do
     it "returns uniq interesting Slack messages sent on dev channel since last friday" do
       travel_to "2022-10-07" do
         user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
+        author1 = TestFactories.create_author(name: user1.name, id: user1.username)
         user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
+        author2 = TestFactories.create_author(name: user2.name, id: user2.username)
         user3 = TestFactories.create_slack_user(id: "user-id-3", name: "User 3", username: "username-3")
+        author3 = TestFactories.create_author(name: user3.name, id: user3.username)
 
         author_config = GoldMiner::AuthorConfig.new({
-          user1.username => {"link" => user1.link},
-          user2.username => {"link" => user2.link},
-          user3.username => {"link" => user3.link}
+          user1.username => {"link" => author1.link},
+          user2.username => {"link" => author2.link},
+          user3.username => {"link" => author3.link}
         })
         slack_client = instance_double(GoldMiner::Slack::Client)
         date = "2022-09-30"
+        msg1 = TestFactories.create_slack_message(
+          "text" => "TIL",
+          "user" => user1,
+          "permalink" => "https:///message-1-permalink.com"
+        )
+        msg2 = TestFactories.create_slack_message(
+          "text" => "Ruby tip/TIL: Array#sample...",
+          "user" => user2,
+          "permalink" => "https:///message-2-permalink.com"
+        )
+        msg3 = TestFactories.create_slack_message(
+          "text" => "Ruby tip: have fun!",
+          "user" => user2,
+          "permalink" => "https:///message-3-permalink.com"
+        )
+        msg4 = TestFactories.create_slack_message(
+          "text" => "CSS clamp() is so cool!",
+          "user" => user3,
+          "permalink" => "https:///message-4-permalink.com"
+        )
         stub_slack_message_search_requests(slack_client, {
-          "TIL in:dev after:#{date}" => {
-            "ok" => true,
-            "messages" => {
-              "matches" => [
-                {"text" => "TIL",
-                 "user" => user1.id,
-                 "username" => user1.username,
-                 "author_real_name" => user1.name,
-                 "permalink" => "https:///message-1-permalink.com"},
-                {"text" => "Ruby tip/TIL: Array#sample...",
-                 "user" => user2.id,
-                 "username" => user2.username,
-                 "author_real_name" => user2.name,
-                 "permalink" => "https:///message-2-permalink.com"}
-              ],
-              "paging" => {"pages" => 1}
-            }
-          },
-          "tip in:dev after:#{date}" => {
-            "ok" => true,
-            "messages" => {
-              "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...",
-                 "user" => user2.id,
-                 "username" => user2.username,
-                 "author_real_name" => user2.name,
-                 "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "Ruby tip: have fun!",
-                 "user" => user2.id,
-                 "username" => user2.username,
-                 "author_real_name" => user2.name,
-                 "permalink" => "https:///message-3-permalink.com"}
-              ],
-              "paging" => {"pages" => 1}
-            }
-          },
-          "in:dev after:#{date} has::rupee-gold:" => {
-            "messages" => {
-              "matches" => [
-                {"text" => "Ruby tip/TIL: Array#sample...",
-                 "user" => user2.id,
-                 "username" => user2.username,
-                 "author_real_name" => user2.name,
-                 "permalink" => "https:///message-2-permalink.com"},
-                {"text" => "CSS clamp() is so cool!",
-                 "user" => user3.id,
-                 "username" => user3.username,
-                 "author_real_name" => user3.name,
-                 "permalink" => "https:///message-4-permalink.com"}
-              ],
-              "paging" => {"pages" => 1}
-            }
-          }
+          "TIL in:dev after:#{date}" => [msg1, msg2],
+          "tip in:dev after:#{date}" => [msg2, msg3],
+          "in:dev after:#{date} has::rupee-gold:" => [msg2, msg4]
         })
 
         explorer = described_class.new(slack_client, author_config)
         messages = explorer.explore("dev", start_on: date)
 
         expect(messages).to match_array [
-          GoldMiner::Slack::Message.new(text: "TIL", author: user1, permalink: "https:///message-1-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "Ruby tip/TIL: Array#sample...", author: user2, permalink: "https:///message-2-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "Ruby tip: have fun!", author: user2, permalink: "https:///message-3-permalink.com"),
-          GoldMiner::Slack::Message.new(text: "CSS clamp() is so cool!", author: user3, permalink: "https:///message-4-permalink.com")
+          TestFactories.create_gold_nugget(content: msg1.text, author: author1, source: msg1.permalink),
+          TestFactories.create_gold_nugget(content: msg2.text, author: author2, source: msg2.permalink),
+          TestFactories.create_gold_nugget(content: msg3.text, author: author2, source: msg3.permalink),
+          TestFactories.create_gold_nugget(content: msg4.text, author: author3, source: msg4.permalink)
         ]
       end
     end
@@ -92,7 +65,7 @@ RSpec.describe GoldMiner::SlackExplorer do
       allow(mock_client).to receive(:search_messages) {
         sleep seconds_of_sleep
 
-        double("Search result", messages: double("Slack messages", matches: [], paging: double("Slack paging", pages: 1)))
+        []
       }
       slack_explorer = described_class.new(mock_client, GoldMiner::AuthorConfig.new({}))
 
@@ -109,7 +82,7 @@ RSpec.describe GoldMiner::SlackExplorer do
 
     def stub_slack_message_search_requests(client, requests)
       requests.map do |query, response|
-        allow(client).to receive(:search_messages).with(query).and_return(deep_open_struct(response))
+        allow(client).to receive(:search_messages).with(query).and_return(response)
       end
     end
   end
