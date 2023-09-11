@@ -19,7 +19,7 @@ module GoldMiner
   def convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: GoldMiner::BlogPost)
     blog_post_builder.new(
       slack_channel: channel,
-      messages: gold_nuggets,
+      gold_nuggets: gold_nuggets,
       since: Helpers::Time.last_friday,
       writer: BlogPost::Writer.from_env
     )

@@ -4,9 +4,9 @@ require "async"
 
 module GoldMiner
   class BlogPost
-    def initialize(slack_channel:, messages:, since:, writer: SimpleWriter.new)
+    def initialize(slack_channel:, gold_nuggets:, since:, writer: SimpleWriter.new)
       @slack_channel = slack_channel
-      @messages = messages
+      @gold_nuggets = gold_nuggets
       @since = since
       @writer = writer
     end
@@ -51,16 +51,16 @@ module GoldMiner
     end
 
     def highlights
-      @messages
-        .map { |message| Async { highlight_from(message) } }
+      @gold_nuggets
+        .map { |gold_nugget| Async { highlight_from(gold_nugget) } }
         .map(&:wait)
         .join("\n")
         .chomp("")
     end
 
-    def highlight_from(message)
-      title_task = Async { @writer.give_title_to(message) }
-      summary_task = Async { @writer.summarize(message) }
+    def highlight_from(gold_nugget)
+      title_task = Async { @writer.give_title_to(gold_nugget) }
+      summary_task = Async { @writer.summarize(gold_nugget) }
 
       <<~MARKDOWN
         ## #{title_task.wait}
@@ -80,19 +80,19 @@ module GoldMiner
     end
 
     def topics
-      @topics ||= @messages
-        .map { |message| Async { topics_from(message) } }
+      @topics ||= @gold_nuggets
+        .map { |gold_nugget| Async { topics_from(gold_nugget) } }
         .flat_map(&:wait)
         .uniq
     end
 
-    def topics_from(message)
-      @writer.extract_topics_from(message)
+    def topics_from(gold_nugget)
+      @writer.extract_topics_from(gold_nugget)
     end
 
     def authors
-      @messages
-        .map { |message| message.author.name_with_link_reference }
+      @gold_nuggets
+        .map { |gold_nugget| gold_nugget.author.name_with_link_reference }
         .uniq
         .sort
         .then { |authors| Helpers::Sentence.from(authors) }

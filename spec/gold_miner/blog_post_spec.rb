@@ -13,7 +13,7 @@ RSpec.describe GoldMiner::BlogPost do
           TestFactories.create_gold_nugget(content: "TIL 2", author: author2, source: "http://permalink-2.com"),
           TestFactories.create_gold_nugget(content: "Tip 1", author: author1, source: "http://permalink-3.com")
         ]
-        blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: gold_nuggets, since: "2022-09-30")
+        blogpost = GoldMiner::BlogPost.new(slack_channel: "design", gold_nuggets: gold_nuggets, since: "2022-09-30")
 
         result = blogpost.to_s
 
@@ -83,7 +83,7 @@ RSpec.describe GoldMiner::BlogPost do
       seconds_of_sleep = 0.5
       blogpost = GoldMiner::BlogPost.new(
         slack_channel: "design",
-        messages: gold_nuggets,
+        gold_nuggets: gold_nuggets,
         since: "2022-09-30",
         writer: sleep_writer.new(seconds_of_sleep: seconds_of_sleep)
       )
