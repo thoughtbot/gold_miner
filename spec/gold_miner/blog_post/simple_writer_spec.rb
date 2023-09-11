@@ -11,20 +11,20 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
     it "delegates to the topic extractor" do
       topics = ["topic-#{rand}"]
       topic_extractor = double(:topic_extractor, call: topics)
-      message = {text: "message text"}
+      gold_nugget = TestFactories.create_gold_nugget(content: "message text")
 
       writer = described_class.new(topic_extractor: topic_extractor)
-      extracted_topics = writer.extract_topics_from(message)
+      extracted_topics = writer.extract_topics_from(gold_nugget)
 
       expect(extracted_topics).to eq(topics)
-      expect(topic_extractor).to have_received(:call).with(message[:text])
+      expect(topic_extractor).to have_received(:call).with(gold_nugget.content)
     end
 
     it "has a default topic extractor" do
-      message = {text: "message text"}
+      gold_nugget = TestFactories.create_gold_nugget(content: "message text")
       writer = described_class.new
 
-      extracted_topics = writer.extract_topics_from(message)
+      extracted_topics = writer.extract_topics_from(gold_nugget)
 
       expect(extracted_topics).to be_a Array
     end
@@ -32,10 +32,10 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
 
   describe "#give_title_to" do
     it "returns the message permalink" do
-      message = {permalink: "https://permalink.com", text: "message text"}
+      gold_nugget = TestFactories.create_gold_nugget(source: "https://permalink.com", content: "message text")
       writer = described_class.new
 
-      title = writer.give_title_to(message)
+      title = writer.give_title_to(gold_nugget)
 
       expect(title).to eq("https://permalink.com")
     end
@@ -43,12 +43,12 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
 
   describe "#summarize" do
     it "returns the given text" do
-      message = {text: "message text"}
+      gold_nugget = TestFactories.create_gold_nugget(content: "message text")
       writer = described_class.new
 
-      summary = writer.summarize(message)
+      summary = writer.summarize(gold_nugget)
 
-      expect(summary).to eq(message[:text])
+      expect(summary).to eq(gold_nugget.content)
     end
   end
 end
