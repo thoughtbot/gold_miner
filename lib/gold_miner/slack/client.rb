@@ -37,19 +37,18 @@ module GoldMiner
           warn_on_multiple_pages(response)
           fetch_author_names(response)
 
-          response.messages.matches
-        }
-        .map { |message|
-          Slack::Message.new(
-            id: message.id,
-            text: message.text,
-            user: Slack::User.new(
-              id: message.user,
-              name: message.author_real_name,
-              username: message.username
-            ),
-            permalink: message.permalink
-          )
+          response.messages.matches.map { |message|
+            Slack::Message.new(
+              id: message.id,
+              text: message.text,
+              user: Slack::User.new(
+                id: message.user,
+                name: message.author_real_name,
+                username: message.username
+              ),
+              permalink: message.permalink
+            )
+          }
         }
     end
 
