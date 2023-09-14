@@ -30,23 +30,22 @@ module GoldMiner
 
     def merge_messages(*search_tasks)
       search_tasks
-        .flat_map { |task| task.wait.messages.matches }
+        .flat_map(&:wait)
         .uniq { |message| message[:permalink] }
         .map { |message|
-          Slack::Message.new(
-            text: message.text,
+          GoldNugget.new(
+            content: message.text,
             author: author_of(message),
-            permalink: message.permalink
+            source: message.permalink
           )
         }
     end
 
     def author_of(message)
-      Slack::User.new(
-        name: message.author_real_name,
-        link: link_for(message.username),
-        id: message.user,
-        username: message.username
+      Author.new(
+        id: message.user.username,
+        name: message.user.name,
+        link: link_for(message.user.username)
       )
     end
 

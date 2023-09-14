@@ -4,16 +4,16 @@ require "spec_helper"
 
 RSpec.describe GoldMiner::BlogPost do
   describe "#to_s" do
-    it "creates a blogpost from a list of messages" do
+    it "creates a blogpost from a list of gold nuggets" do
       travel_to "2022-10-07" do
-        author1 = TestFactories.create_slack_user(id: "U123", name: "John Doe", username: "john.doe", link: "https://example.com/john.doe")
-        author2 = TestFactories.create_slack_user(id: "U456", name: "Jane Smith", username: "jane.smith", link: "https://example.com/jane.smith")
-        messages = [
-          GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
-          GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com"),
-          GoldMiner::Slack::Message.new(text: "Tip 1", author: author1, permalink: "http://permalink-3.com")
+        author1 = TestFactories.create_author(name: "John Doe", id: "john.doe", link: "https://example.com/john.doe")
+        author2 = TestFactories.create_author(name: "Jane Smith", id: "jane.smith", link: "https://example.com/jane.smith")
+        gold_nuggets = [
+          TestFactories.create_gold_nugget(content: "TIL 1", author: author1, source: "http://permalink-1.com"),
+          TestFactories.create_gold_nugget(content: "TIL 2", author: author2, source: "http://permalink-2.com"),
+          TestFactories.create_gold_nugget(content: "Tip 1", author: author1, source: "http://permalink-3.com")
         ]
-        blogpost = GoldMiner::BlogPost.new(slack_channel: "design", messages: messages, since: "2022-09-30")
+        blogpost = GoldMiner::BlogPost.new(slack_channel: "design", gold_nuggets: gold_nuggets, since: "2022-09-30")
 
         result = blogpost.to_s
 
@@ -74,16 +74,16 @@ RSpec.describe GoldMiner::BlogPost do
           "test"
         end
       end
-      author1 = TestFactories.create_slack_user(id: "U123", name: "John Doe", username: "john.doe", link: "https://example.com/john.doe")
-      author2 = TestFactories.create_slack_user(id: "U456", name: "Jane Smith", username: "jane.smith", link: "https://example.com/jane.smith")
-      messages = [
-        GoldMiner::Slack::Message.new(text: "TIL 1", author: author1, permalink: "http://permalink-1.com"),
-        GoldMiner::Slack::Message.new(text: "TIL 2", author: author2, permalink: "http://permalink-2.com")
+      author1 = TestFactories.create_author(name: "John Doe", id: "john.doe", link: "https://example.com/john.doe")
+      author2 = TestFactories.create_author(name: "Jane Smith", id: "jane.smith", link: "https://example.com/jane.smith")
+      gold_nuggets = [
+        TestFactories.create_gold_nugget(content: "TIL 1", author: author1, source: "http://permalink-1.com"),
+        TestFactories.create_gold_nugget(content: "TIL 2", author: author2, source: "http://permalink-2.com")
       ]
       seconds_of_sleep = 0.5
       blogpost = GoldMiner::BlogPost.new(
         slack_channel: "design",
-        messages: messages,
+        gold_nuggets: gold_nuggets,
         since: "2022-09-30",
         writer: sleep_writer.new(seconds_of_sleep: seconds_of_sleep)
       )

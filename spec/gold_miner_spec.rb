@@ -15,47 +15,45 @@ RSpec.describe GoldMiner do
     end
 
     it "returns interesting messages from the given channel" do
-      message_author = TestFactories.create_slack_user(link: "#to-do")
-      slack_message = TestFactories.create_slack_message(author: message_author)
-      search_result = deep_open_struct({
-        messages: {
-          matches: [
-            {
-              text: slack_message.text,
-              user: message_author.id,
-              username: message_author.username,
-              author_real_name: message_author.name,
-              permalink: slack_message.permalink
-            }
-          ]
-        }
-      })
+      message_author = TestFactories.create_slack_user
+      slack_message = TestFactories.create_slack_message(user: message_author)
+      search_result = [slack_message]
 
       slack_client = instance_double(GoldMiner::Slack::Client, search_messages: search_result)
       slack_client_builder = double(GoldMiner::Slack::Client, build: Success(slack_client))
 
       result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
 
-      expect(result.value!).to eq [slack_message]
+      expect(result.value!).to eq [
+        TestFactories.create_gold_nugget(
+          content: slack_message.text,
+          author: TestFactories.create_author(
+            id: message_author.username,
+            name: message_author.name,
+            link: "#to-do"
+          ),
+          source: slack_message.permalink
+        )
+      ]
     end
   end
 
   describe ".convert_messages_to_blogpost" do
-    it "converts slack messages to a blogpost and writes it to a file" do
+    it "converts slack messages to a blogpost" do
       travel_to "2022-10-07" do
         with_env("OPEN_AI_API_TOKEN" => nil) do
           channel = "dev"
-          messages = [
-            {text: "text", author_username: "user1", permalink: "http://permalink-1.com"},
-            {text: "text2", author_username: "user2", permalink: "http://permalink-2.com"}
+          gold_nuggets = [
+            TestFactories.create_gold_nugget,
+            TestFactories.create_gold_nugget
           ]
           blog_post_builder = spy("BlogPost builder")
 
-          GoldMiner.convert_messages_to_blogpost(channel, messages, blog_post_builder: blog_post_builder)
+          GoldMiner.convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: blog_post_builder)
 
           expect(blog_post_builder).to have_received(:new).with(
             slack_channel: channel,
-            messages: messages,
+            gold_nuggets: gold_nuggets,
             since: "2022-09-30",
             writer: instance_of(GoldMiner::BlogPost::SimpleWriter)
           )
@@ -68,14 +66,14 @@ RSpec.describe GoldMiner do
         travel_to "2022-10-07" do
           with_env("OPEN_AI_API_TOKEN" => "test-token") do
             channel = "dev"
-            messages = []
+            gold_nuggets = []
             blog_post_builder = spy("BlogPost builder")
 
-            GoldMiner.convert_messages_to_blogpost(channel, messages, blog_post_builder: blog_post_builder)
+            GoldMiner.convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: blog_post_builder)
 
             expect(blog_post_builder).to have_received(:new).with(
               slack_channel: channel,
-              messages: messages,
+              gold_nuggets: gold_nuggets,
               since: "2022-09-30",
               writer: instance_of(GoldMiner::BlogPost::OpenAiWriter)
             )

@@ -33,9 +33,22 @@ module GoldMiner
     def search_messages(query)
       @slack
         .search_messages(query:)
-        .tap { |response|
+        .then { |response|
           warn_on_multiple_pages(response)
           fetch_author_names(response)
+
+          response.messages.matches.map { |message|
+            Slack::Message.new(
+              id: message.id,
+              text: message.text,
+              user: Slack::User.new(
+                id: message.user,
+                name: message.author_real_name,
+                username: message.username
+              ),
+              permalink: message.permalink
+            )
+          }
         }
     end
 
@@ -71,7 +84,6 @@ module GoldMiner
           .user
           .profile
           .real_name
-      # .tap { |name| @user_name_cache[user_id] = name }
     end
 
     def user_info(user_id)
