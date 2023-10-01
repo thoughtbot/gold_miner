@@ -37,7 +37,8 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
-    faraday (2.7.2)
+    faraday (2.7.11)
+      base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-mashify (0.1.1)
@@ -48,7 +49,7 @@ GEM
     faraday-net_http (3.0.2)
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
-    gli (2.21.0)
+    gli (2.21.1)
     hashdiff (1.0.1)
     hashie (5.0.0)
     httparty (0.21.0)
@@ -60,7 +61,7 @@ GEM
     lint_roller (1.1.0)
     mini_mime (1.1.5)
     multi_xml (0.6.0)
-    multipart-post (2.2.3)
+    multipart-post (2.3.0)
     parallel (1.23.0)
     parser (3.2.2.3)
       ast (~> 2.4.1)
@@ -111,7 +112,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    slack-ruby-client (2.1.0)
+    slack-ruby-client (2.2.0)
       faraday (>= 2.0)
       faraday-mashify
       faraday-multipart
