@@ -129,7 +129,7 @@ GEM
     standard-performance (1.2.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.19.0)
-    timecop (0.9.6)
+    timecop (0.9.8)
     timers (4.3.5)
     unicode-display_width (2.4.2)
     webmock (3.19.1)
