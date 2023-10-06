@@ -70,7 +70,7 @@ module GoldMiner
     end
 
     def time_period
-      start_date = Helpers::Time.pretty_date(Date.parse(@since))
+      start_date = Helpers::Time.pretty_date(Date.parse(@since.to_s))
 
       "(#{start_date})"
     end

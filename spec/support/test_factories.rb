@@ -10,6 +10,15 @@ module TestFactories
     GoldMiner::Author.new(**default_attributes.merge(overriden_attributes))
   end
 
+  def create_gold_container(overriden_attributes = {})
+    default_attributes = {
+      gold_nuggets: [],
+      origin: "some-channel",
+      packing_date: Date.today
+    }
+    GoldMiner::GoldContainer.new(**default_attributes.merge(overriden_attributes))
+  end
+
   def create_gold_nugget(overriden_attributes = {})
     default_attributes = {
       content: "TIL about the difference betweeen .size and .count in Rails",
