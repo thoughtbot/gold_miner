@@ -16,13 +16,8 @@ module GoldMiner
       .fmap { |client| explore(slack_channel, client) }
   end
 
-  def convert_messages_to_blogpost(channel, container, blog_post_builder: GoldMiner::BlogPost)
-    blog_post_builder.new(
-      slack_channel: container.origin,
-      gold_nuggets: container.gold_nuggets,
-      since: container.packing_date,
-      writer: BlogPost::Writer.from_env
-    )
+  def smith_blog_post(gold_container, ...)
+    BlogPostSmith.new(...).smith(gold_container)
   end
 
   private
