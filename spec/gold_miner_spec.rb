@@ -23,8 +23,9 @@ RSpec.describe GoldMiner do
       slack_client_builder = double(GoldMiner::Slack::Client, build: Success(slack_client))
 
       result = GoldMiner.mine_in("dev", slack_client: slack_client_builder, env_file: "./spec/fixtures/.env.test")
+      gold_nuggets = result.value!.gold_nuggets
 
-      expect(result.value!).to eq [
+      expect(gold_nuggets).to eq [
         TestFactories.create_gold_nugget(
           content: slack_message.text,
           author: TestFactories.create_author(
@@ -40,7 +41,8 @@ RSpec.describe GoldMiner do
 
   describe ".convert_messages_to_blogpost" do
     it "converts slack messages to a blogpost" do
-      travel_to "2022-10-07" do
+      date = "2022-10-07"
+      travel_to date do
         with_env("OPEN_AI_API_TOKEN" => nil) do
           channel = "dev"
           gold_nuggets = [
@@ -48,13 +50,18 @@ RSpec.describe GoldMiner do
             TestFactories.create_gold_nugget
           ]
           blog_post_builder = spy("BlogPost builder")
+          container = TestFactories.create_gold_container(
+            gold_nuggets: gold_nuggets,
+            origin: channel,
+            packing_date: Date.today
+          )
 
-          GoldMiner.convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: blog_post_builder)
+          GoldMiner.convert_messages_to_blogpost(channel, container, blog_post_builder: blog_post_builder)
 
           expect(blog_post_builder).to have_received(:new).with(
             slack_channel: channel,
             gold_nuggets: gold_nuggets,
-            since: "2022-09-30",
+            since: Date.parse(date),
             writer: instance_of(GoldMiner::BlogPost::SimpleWriter)
           )
         end
@@ -63,18 +70,24 @@ RSpec.describe GoldMiner do
 
     context "when the OPEN_AI_API_TOKEN is set" do
       it "uses the OpenAiWriter" do
-        travel_to "2022-10-07" do
+        date = "2022-10-07"
+        travel_to date do
           with_env("OPEN_AI_API_TOKEN" => "test-token") do
             channel = "dev"
             gold_nuggets = []
             blog_post_builder = spy("BlogPost builder")
+            container = TestFactories.create_gold_container(
+              gold_nuggets: gold_nuggets,
+              origin: channel,
+              packing_date: Date.today
+            )
 
-            GoldMiner.convert_messages_to_blogpost(channel, gold_nuggets, blog_post_builder: blog_post_builder)
+            GoldMiner.convert_messages_to_blogpost(channel, container, blog_post_builder: blog_post_builder)
 
             expect(blog_post_builder).to have_received(:new).with(
               slack_channel: channel,
               gold_nuggets: gold_nuggets,
-              since: "2022-09-30",
+              since: Date.parse(date),
               writer: instance_of(GoldMiner::BlogPost::OpenAiWriter)
             )
           end

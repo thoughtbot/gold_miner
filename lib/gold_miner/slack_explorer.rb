@@ -8,14 +8,16 @@ module GoldMiner
     end
 
     def explore(channel, start_on:)
+      start_on = Date.parse(start_on.to_s)
       interesting_messages = interesting_messages_query(channel, start_on)
 
       Sync do
         til_messages_task = Async { search_messages(interesting_messages.with_topic("TIL")) }
         tip_messages_task = Async { search_messages(interesting_messages.with_topic("tip")) }
         hand_picked_messages_task = Async { search_messages(interesting_messages.with_reaction("rupee-gold")) }
+        nuggets = extract_nuggets(til_messages_task, tip_messages_task, hand_picked_messages_task)
 
-        merge_messages(til_messages_task, tip_messages_task, hand_picked_messages_task)
+        GoldContainer.new(gold_nuggets: nuggets, origin: channel, packing_date: start_on)
       end
     end
 
@@ -25,10 +27,10 @@ module GoldMiner
       Slack::MessagesQuery
         .new
         .on_channel(channel)
-        .sent_after(Date.parse(start_on.to_s))
+        .sent_after(start_on)
     end
 
-    def merge_messages(*search_tasks)
+    def extract_nuggets(*search_tasks)
       search_tasks
         .flat_map(&:wait)
         .uniq { |message| message[:permalink] }

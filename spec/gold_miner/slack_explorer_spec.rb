@@ -40,21 +40,24 @@ RSpec.describe GoldMiner::SlackExplorer do
           "user" => user3,
           "permalink" => "https:///message-4-permalink.com"
         )
+        slack_channel = "dev"
         stub_slack_message_search_requests(slack_client, {
-          "TIL in:dev after:#{date}" => [msg1, msg2],
-          "tip in:dev after:#{date}" => [msg2, msg3],
-          "in:dev after:#{date} has::rupee-gold:" => [msg2, msg4]
+          "TIL in:#{slack_channel} after:#{date}" => [msg1, msg2],
+          "tip in:#{slack_channel} after:#{date}" => [msg2, msg3],
+          "in:#{slack_channel} after:#{date} has::rupee-gold:" => [msg2, msg4]
         })
 
         explorer = described_class.new(slack_client, author_config)
-        messages = explorer.explore("dev", start_on: date)
+        container = explorer.explore(slack_channel, start_on: date)
 
-        expect(messages).to match_array [
+        expect(container.gold_nuggets).to match_array [
           TestFactories.create_gold_nugget(content: msg1.text, author: author1, source: msg1.permalink),
           TestFactories.create_gold_nugget(content: msg2.text, author: author2, source: msg2.permalink),
           TestFactories.create_gold_nugget(content: msg3.text, author: author2, source: msg3.permalink),
           TestFactories.create_gold_nugget(content: msg4.text, author: author3, source: msg4.permalink)
         ]
+        expect(container.origin).to eq slack_channel
+        expect(container.packing_date).to eq Date.parse(date)
       end
     end
 

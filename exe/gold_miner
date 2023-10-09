@@ -16,9 +16,9 @@ t0 = Time.now
 
 GoldMiner
   .mine_in(channel)
-  .fmap { |messages|
-    debug "Found #{messages.size} messages in #{Time.now - t0} seconds."
-    puts GoldMiner.convert_messages_to_blogpost(channel, messages)
+  .fmap { |gold_container|
+    debug "Found #{gold_container.gold_nuggets.size} messages in #{Time.now - t0} seconds."
+    puts GoldMiner.convert_messages_to_blogpost(channel, container)
   }
   .or { |error| abort "[ERROR] #{error}" }
 
