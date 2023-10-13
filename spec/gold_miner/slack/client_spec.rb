@@ -52,8 +52,8 @@ RSpec.describe GoldMiner::Slack::Client do
       search_query = "tip in:dev"
       user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
       user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
-      msg1 = {"id" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
-      msg2 = {"id" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
+      msg1 = {"iid" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
+      msg2 = {"iid" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
       stub_slack_message_search_request(
         query: search_query,
         body: {
@@ -79,8 +79,8 @@ RSpec.describe GoldMiner::Slack::Client do
       messages = slack.search_messages(search_query)
 
       expect(messages).to match_array [
-        TestFactories.create_slack_message(id: msg1["id"], text: msg1["text"], user: user1, permalink: msg1["permalink"]),
-        TestFactories.create_slack_message(id: msg2["id"], text: msg2["text"], user: user2, permalink: msg2["permalink"])
+        TestFactories.create_slack_message(id: msg1["iid"], text: msg1["text"], user: user1, permalink: msg1["permalink"]),
+        TestFactories.create_slack_message(id: msg2["iid"], text: msg2["text"], user: user2, permalink: msg2["permalink"])
       ]
     end
 
@@ -89,8 +89,8 @@ RSpec.describe GoldMiner::Slack::Client do
       stub_slack_auth_test_request(status: 200, token: token)
       search_query = "tip in:dev"
       user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
-      msg1 = {"id" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
-      msg2 = {"id" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-2-permalink.com"}
+      msg1 = {"iid" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
+      msg2 = {"iid" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-2-permalink.com"}
       stub_slack_message_search_request(
         query: search_query,
         body: {
@@ -121,8 +121,8 @@ RSpec.describe GoldMiner::Slack::Client do
       search_query = "tip in:dev"
       user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
       user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
-      msg1 = {"id" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
-      msg2 = {"id" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
+      msg1 = {"iid" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
+      msg2 = {"iid" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
       allow(sleepy_slack_client).to receive(:search_messages).with({query: search_query}) {
         sleep(search_query_time)
 
@@ -168,8 +168,8 @@ RSpec.describe GoldMiner::Slack::Client do
         search_query = "tip in:dev"
         user1 = TestFactories.create_slack_user(id: "user-id-1", name: "User 1", username: "username-1")
         user2 = TestFactories.create_slack_user(id: "user-id-2", name: "User 2", username: "username-2")
-        msg1 = {"id" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
-        msg2 = {"id" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
+        msg1 = {"iid" => "msg1", "text" => "TIL", "user" => user1.id, "username" => user1.username, "permalink" => "https:///message-1-permalink.com"}
+        msg2 = {"iid" => "msg2", "text" => "Ruby tip/TIL: Array#sample...", "user" => user2.id, "username" => user2.username, "permalink" => "https:///message-2-permalink.com"}
         stub_slack_message_search_request(
           query: search_query,
           body: {
