@@ -20,6 +20,10 @@ module GoldMiner
     BlogPostSmith.new(...).smith(gold_container)
   end
 
+  def distribute(blog_post)
+    TerminalDistributor.new.distribute(blog_post)
+  end
+
   private
 
   def prepare(slack_client)
