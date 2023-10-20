@@ -39,7 +39,7 @@ module GoldMiner
 
           response.messages.matches.map { |message|
             Slack::Message.new(
-              id: message.id,
+              id: message.iid,
               text: message.text,
               user: Slack::User.new(
                 id: message.user,
@@ -69,11 +69,11 @@ module GoldMiner
     def fetch_author_names(response)
       Sync do
         author_names = response.messages.matches.map { |message|
-          Async { [message.id, real_name_for(message.user)] }
+          Async { [message.iid, real_name_for(message.user)] }
         }.map(&:wait).to_h
 
         response.messages.matches.each { |message|
-          message.author_real_name = author_names[message.id]
+          message.author_real_name = author_names[message.iid]
         }
       end
     end

@@ -18,6 +18,7 @@ GoldMiner
   .mine_in(channel)
   .fmap { |gold_container|
     debug "Found #{gold_container.gold_nuggets.size} messages in #{Time.now - t0} seconds."
+
     puts GoldMiner.smith_blog_post(gold_container)
   }
   .or { |error| abort "[ERROR] #{error}" }
