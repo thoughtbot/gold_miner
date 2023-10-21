@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GoldMiner
+class GoldMiner
   class BlogPost
     class SimpleWriter
       def initialize(topic_extractor: TopicExtractor)

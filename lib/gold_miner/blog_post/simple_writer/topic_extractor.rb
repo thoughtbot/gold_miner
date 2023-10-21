@@ -1,4 +1,4 @@
-module GoldMiner
+class GoldMiner
   class BlogPost
     class SimpleWriter
       module TopicExtractor

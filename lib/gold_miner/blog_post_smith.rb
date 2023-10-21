@@ -1,4 +1,4 @@
-module GoldMiner
+class GoldMiner
   class BlogPostSmith
     def initialize(blog_post_class: BlogPost, blog_post_writer: BlogPost::Writer.from_env)
       @blog_post_class = blog_post_class

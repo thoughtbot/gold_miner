@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GoldMiner
+class GoldMiner
   module Slack
     User = Data.define(:id, :name, :username)
   end

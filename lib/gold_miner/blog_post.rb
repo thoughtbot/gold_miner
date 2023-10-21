@@ -2,7 +2,7 @@
 
 require "async"
 
-module GoldMiner
+class GoldMiner
   class BlogPost
     def initialize(slack_channel:, gold_nuggets:, since:, writer: SimpleWriter.new)
       @slack_channel = slack_channel

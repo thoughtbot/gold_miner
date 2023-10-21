@@ -3,7 +3,7 @@
 require "dry/monads"
 require "slack-ruby-client"
 
-module GoldMiner
+class GoldMiner
   class Slack::Client
     extend Dry::Monads[:result]
 

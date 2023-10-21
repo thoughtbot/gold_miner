@@ -1,4 +1,4 @@
-module GoldMiner
+class GoldMiner
   module Helpers
     module Time
       def self.pretty_date(date)

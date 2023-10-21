@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GoldMiner
+class GoldMiner
   class AuthorConfig
     DEFAULT_AUTHOR_LINK = "#to-do"
     DEFAULT_CONFIG_PATH = "lib/config/author_config.yml"

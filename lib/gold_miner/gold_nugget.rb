@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GoldMiner
+class GoldMiner
   GoldNugget = Data.define(:content, :author, :source) do
     def as_conversation
       <<~MARKDOWN

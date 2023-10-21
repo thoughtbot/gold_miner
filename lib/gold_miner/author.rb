@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GoldMiner
+class GoldMiner
   Author = Data.define(:id, :name, :link) do
     alias_method :to_s, :name
 

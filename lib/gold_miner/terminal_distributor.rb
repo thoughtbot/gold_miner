@@ -1,4 +1,4 @@
-module GoldMiner
+class GoldMiner
   class TerminalDistributor
     def distribute(blog_post)
       puts blog_post

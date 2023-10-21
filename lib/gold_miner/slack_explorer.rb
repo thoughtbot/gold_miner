@@ -1,6 +1,6 @@
 require "async"
 
-module GoldMiner
+class GoldMiner
   class SlackExplorer
     def initialize(slack_client, author_config)
       @slack = slack_client

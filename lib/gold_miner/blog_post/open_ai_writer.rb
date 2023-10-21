@@ -2,7 +2,7 @@
 
 require "json"
 
-module GoldMiner
+class GoldMiner
   class BlogPost
     class OpenAiWriter
       def initialize(open_ai_api_token:, fallback_writer:, open_ai_client: OpenAI::Client)

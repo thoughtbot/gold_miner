@@ -1,4 +1,4 @@
-module GoldMiner
+class GoldMiner
   module Slack
     class MessagesQuery
       attr_reader :channel, :start_date, :topic, :reaction
