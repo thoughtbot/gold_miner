@@ -28,6 +28,16 @@ module TestFactories
     GoldMiner::GoldNugget.new(**default_attributes.merge(overriden_attributes))
   end
 
+  def create_blog_post(overriden_attributes = {})
+    default_attributes = {
+      slack_channel: "design",
+      gold_nuggets: [create_gold_nugget],
+      since: Date.today
+    }
+
+    GoldMiner::BlogPost.new(**default_attributes.merge(overriden_attributes))
+  end
+
   def create_slack_user(overriden_attributes = {})
     default_attributes = {
       id: "U123",
