@@ -3,26 +3,32 @@
 $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require "gold_miner"
+require "dotenv"
 
-def debug(msg)
-  return if ENV["DEBUG"].nil?
+def load_env_file
+  Dotenv.load!
+  Dry::Monads::Success()
+rescue Errno::ENOENT
+  Dry::Monads::Failure("Could not load env file #{env_file.inspect}")
+end
 
-  puts "[DEBUG] #{msg}"
+def prepare
+  load_env_file
+    .bind { GoldMiner::Slack::Client.build(api_token: ENV["SLACK_API_TOKEN"]) }
+    .fmap { |slack_client|
+      GoldMiner::SlackExplorer.new(slack_client, GoldMiner::AuthorConfig.default)
+    }
 end
 
 channel = ARGV.first || "dev"
 
-t0 = Time.now
-
-GoldMiner
-  .mine_in(channel)
-  .fmap { |gold_container|
-    debug "Found #{gold_container.gold_nuggets.size} messages in #{Time.now - t0} seconds."
-
-    blog_post = GoldMiner.smith_blog_post(gold_container)
-    GoldMiner.distribute(blog_post)
-  }
+prepare.bind { |slack_explorer|
+  GoldMiner
+    .new(
+      explorer: slack_explorer,
+      smith: GoldMiner::BlogPostSmith.new,
+      distributor: GoldMiner::TerminalDistributor.new
+    )
+    .mine(channel, start_on: GoldMiner::Helpers::Time.last_friday)
+}
   .or { |error| abort "[ERROR] #{error}" }
-
-puts
-debug "Done in #{Time.now - t0} seconds."

@@ -1,38 +1,38 @@
 # frozen_string_literal: true
 
-require "dotenv"
+require "dry/monads"
 require "zeitwerk"
 require "openai"
 
 Zeitwerk::Loader.for_gem.setup
 
 class GoldMiner
-  class << self
-    def mine_in(slack_channel, slack_client: GoldMiner::Slack::Client, env_file: ".env")
-      Dotenv.load!(env_file)
+  include Dry::Monads[:result]
 
-      prepare(slack_client)
-        .fmap { |client| explore(slack_channel, client) }
-    end
+  def initialize(explorer:, smith:, distributor:, env_file: ".env")
+    @explorer = explorer
+    @smith = smith
+    @distributor = distributor
+    @env_file = env_file
+  end
 
-    def smith_blog_post(gold_container, ...)
-      BlogPostSmith.new(...).smith(gold_container)
-    end
+  def mine(location, start_on:)
+    explore(location, start_on:)
+      .bind { |gold_container| smith(gold_container) }
+      .bind { |blog_post| distribute(blog_post) }
+  end
 
-    def distribute(blog_post)
-      TerminalDistributor.new.distribute(blog_post)
-    end
+  private
 
-    private
+  def explore(location, start_on:)
+    Success(@explorer.explore(location, start_on:))
+  end
 
-    def prepare(slack_client)
-      slack_client.build(api_token: ENV["SLACK_API_TOKEN"])
-    end
+  def smith(gold_container)
+    Success(@smith.smith(gold_container))
+  end
 
-    def explore(slack_channel, slack_client)
-      SlackExplorer
-        .new(slack_client, AuthorConfig.default)
-        .explore(slack_channel, start_on: Helpers::Time.last_friday)
-    end
+  def distribute(blog_post)
+    Success(@distributor.distribute(blog_post))
   end
 end

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/monads"
 require "slack-ruby-client"
 
 class GoldMiner
