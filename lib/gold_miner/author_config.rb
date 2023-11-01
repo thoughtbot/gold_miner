@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "yaml"
+
 class GoldMiner
   class AuthorConfig
     DEFAULT_AUTHOR_LINK = "#to-do"
