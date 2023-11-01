@@ -2,7 +2,6 @@
 
 require "dry/monads"
 require "zeitwerk"
-require "openai"
 
 Zeitwerk::Loader.for_gem.setup
 

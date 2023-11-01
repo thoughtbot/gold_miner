@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "openai"
 require "json"
 
 class GoldMiner
@@ -53,7 +54,7 @@ class GoldMiner
           }
         )
 
-        if !response.success?
+        if !response["error"].nil?
           warn "[WARNING] OpenAI error: #{response["error"]["message"]}"
           return
         end
