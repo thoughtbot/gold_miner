@@ -6,7 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake", "~> 13.1"
-gem "standard", "~> 1.31"
+gem "standard", "~> 1.32"
 
 group :test do
   gem "rspec", "~> 3.0"
