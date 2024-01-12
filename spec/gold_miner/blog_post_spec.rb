@@ -20,7 +20,7 @@ RSpec.describe GoldMiner::BlogPost do
         expect(result).to eq <<~MARKDOWN
           ---
           title: "This week in #design (Sep 30, 2022)"
-          tags: this-week-in-design, til, tip
+          tags: this week in design, til, tip
           teaser: >
             Highlights of what happened in our #design channel on Slack this week.
           author: Matheus Richard
@@ -97,7 +97,7 @@ RSpec.describe GoldMiner::BlogPost do
       expect(result).to eq <<~MARKDOWN
         ---
         title: "This week in #design (Sep 30, 2022)"
-        tags: this-week-in-design, test, test2
+        tags: this week in design, test, test2
         teaser: >
           Highlights of what happened in our #design channel on Slack this week.
         author: Matheus Richard

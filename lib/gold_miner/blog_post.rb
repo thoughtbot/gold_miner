@@ -45,7 +45,7 @@ class GoldMiner
 
     def tags
       [
-        "this-week-in-#{@slack_channel}",
+        "this week in #{@slack_channel}",
         *topic_tags
       ].join(", ")
     end
