@@ -7,7 +7,7 @@ RSpec.describe GoldMiner::AuthorConfig do
     it "loads the author links from the config file" do
       author_config = described_class.default
 
-      link = author_config.link_for("matheusrich")
+      link = author_config.link_for("matheus")
 
       expect(link).to eq "https://thoughtbot.com/blog/authors/matheus-richard"
     end
