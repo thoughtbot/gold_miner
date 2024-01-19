@@ -23,7 +23,8 @@ RSpec.describe GoldMiner::BlogPost do
           tags: this week in design, til, tip
           teaser: >
             Highlights of what happened in our #design channel on Slack this week.
-          author: Matheus Richard
+          author: thoughtbot
+          editor_name: Your Name Here
           auto_social_share: true
           ---
 
@@ -100,7 +101,8 @@ RSpec.describe GoldMiner::BlogPost do
         tags: this week in design, test, test2
         teaser: >
           Highlights of what happened in our #design channel on Slack this week.
-        author: Matheus Richard
+        author: thoughtbot
+        editor_name: Your Name Here
         auto_social_share: true
         ---
 

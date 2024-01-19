@@ -22,7 +22,8 @@ class GoldMiner
           tags: #{tags_task.wait}
           teaser: >
             Highlights of what happened in our ##{@slack_channel} channel on Slack this week.
-          author: Matheus Richard
+          author: thoughtbot
+          editor_name: Your Name Here
           auto_social_share: true
           ---
 
