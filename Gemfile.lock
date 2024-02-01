@@ -20,7 +20,6 @@ GEM
       fiber-annotation
       io-event (~> 1.1)
       timers (~> 4.1)
-    base64 (0.2.0)
     concurrent-ruby (1.1.10)
     console (1.23.2)
       fiber-annotation
@@ -38,16 +37,15 @@ GEM
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
     event_stream_parser (0.3.0)
-    faraday (2.7.11)
-      base64
-      faraday-net_http (>= 2.0, < 3.1)
-      ruby2_keywords (>= 0.0.4)
+    faraday (2.9.0)
+      faraday-net_http (>= 2.0, < 3.2)
     faraday-mashify (0.1.1)
       faraday (~> 2.0)
       hashie
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
-    faraday-net_http (3.0.2)
+    faraday-net_http (3.1.0)
+      net-http
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
     gli (2.21.1)
@@ -58,6 +56,8 @@ GEM
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     multipart-post (2.3.0)
+    net-http (0.4.1)
+      uri
     parallel (1.24.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
@@ -102,14 +102,13 @@ GEM
       faraday (>= 1)
       faraday-multipart (>= 1)
     ruby-progressbar (1.13.0)
-    ruby2_keywords (0.0.5)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    slack-ruby-client (2.2.0)
+    slack-ruby-client (2.3.0)
       faraday (>= 2.0)
       faraday-mashify
       faraday-multipart
@@ -130,6 +129,7 @@ GEM
     timecop (0.9.8)
     timers (4.3.5)
     unicode-display_width (2.5.0)
+    uri (0.13.0)
     webmock (3.19.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
