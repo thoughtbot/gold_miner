@@ -12,7 +12,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.5)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     async (2.8.0)
@@ -20,11 +20,13 @@ GEM
       fiber-annotation
       io-event (~> 1.1)
       timers (~> 4.1)
+    bigdecimal (3.1.6)
     concurrent-ruby (1.1.10)
     console (1.23.3)
       fiber-annotation
       fiber-local
-    crack (0.4.5)
+    crack (1.0.0)
+      bigdecimal
       rexml
     diff-lcs (1.5.0)
     docile (1.4.0)
@@ -49,7 +51,7 @@ GEM
     fiber-annotation (0.2.0)
     fiber-local (1.0.0)
     gli (2.21.1)
-    hashdiff (1.0.1)
+    hashdiff (1.1.0)
     hashie (5.0.0)
     io-event (1.4.2)
     json (2.7.1)
@@ -62,7 +64,7 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
-    public_suffix (5.0.3)
+    public_suffix (5.0.4)
     racc (1.7.3)
     rainbow (3.1.1)
     rake (13.1.0)
@@ -130,7 +132,7 @@ GEM
     timers (4.3.5)
     unicode-display_width (2.5.0)
     uri (0.13.0)
-    webmock (3.19.1)
+    webmock (3.23.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
