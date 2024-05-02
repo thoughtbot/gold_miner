@@ -15,14 +15,14 @@ GEM
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    async (2.10.1)
+    async (2.10.2)
       console (~> 1.10)
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
     bigdecimal (3.1.6)
     concurrent-ruby (1.1.10)
-    console (1.23.6)
+    console (1.24.0)
       fiber-annotation
       fiber-local
       json
@@ -55,7 +55,7 @@ GEM
     hashdiff (1.1.0)
     hashie (5.0.0)
     io-event (1.5.1)
-    json (2.7.1)
+    json (2.7.2)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     multipart-post (2.3.0)
