@@ -20,7 +20,7 @@ GEM
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
-    bigdecimal (3.1.6)
+    bigdecimal (3.1.8)
     concurrent-ruby (1.1.10)
     console (1.24.0)
       fiber-annotation
@@ -65,7 +65,7 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
-    public_suffix (5.0.4)
+    public_suffix (5.0.5)
     racc (1.7.3)
     rainbow (3.1.1)
     rake (13.2.1)
@@ -135,7 +135,7 @@ GEM
     timers (4.3.5)
     unicode-display_width (2.5.0)
     uri (0.13.0)
-    webmock (3.23.0)
+    webmock (3.23.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
