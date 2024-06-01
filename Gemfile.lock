@@ -15,16 +15,16 @@ GEM
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    async (2.10.2)
-      console (~> 1.10)
+    async (2.11.0)
+      console (~> 1.25, >= 1.25.2)
       fiber-annotation
       io-event (~> 1.5, >= 1.5.1)
       timers (~> 4.1)
     bigdecimal (3.1.6)
     concurrent-ruby (1.1.10)
-    console (1.24.0)
+    console (1.25.2)
       fiber-annotation
-      fiber-local
+      fiber-local (~> 1.1)
       json
     crack (1.0.0)
       bigdecimal
@@ -50,7 +50,9 @@ GEM
     faraday-net_http (3.1.0)
       net-http
     fiber-annotation (0.2.0)
-    fiber-local (1.0.0)
+    fiber-local (1.1.0)
+      fiber-storage
+    fiber-storage (0.1.1)
     gli (2.21.1)
     hashdiff (1.1.0)
     hashie (5.0.0)
