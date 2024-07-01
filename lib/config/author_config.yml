@@ -16,6 +16,9 @@ fer:
 jeanine:
   link: https://thoughtbot.com/blog/authors/jeanine-soterwood
 
+joelq:
+  link: https://thoughtbot.com/blog/authors/joel-quenneville
+
 matheus:
   link: https://thoughtbot.com/blog/authors/matheus-richard
 
@@ -28,11 +31,17 @@ neilson:
 remy:
   link: https://thoughtbot.com/blog/authors/remy-hannequin
 
+sara.lima:
+  link: https://thoughtbot.com/blog/authors/sarah-lima
+
 seanpdoyle:
   link: https://thoughtbot.com/blog/authors/sean-doyle
 
 spolito:
   link: https://thoughtbot.com/blog/authors/steve-polito
+
+stefanni:
+  link: https://www.stefannibrasil.me/
 
 summer:
   link: https://github.com/thoughtbot-summer
