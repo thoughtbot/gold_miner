@@ -1,8 +1,8 @@
 Timecop.safe_mode = true
 
 module TimecopHelpers
-  def travel_to(date, &block)
-    Timecop.travel(date, &block)
+  def travel_to(date, &)
+    Timecop.travel(date, &)
   end
 end
 
