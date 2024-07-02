@@ -3,7 +3,7 @@ PATH
   specs:
     gold_miner (0.1.0)
       async (~> 2.6)
-      dotenv (~> 2.8.0)
+      dotenv (>= 2.8, < 3.2)
       dry-monads (~> 1.6)
       ruby-openai (~> 5.0)
       slack-ruby-client (~> 2.x)
@@ -31,7 +31,7 @@ GEM
       rexml
     diff-lcs (1.5.1)
     docile (1.4.0)
-    dotenv (2.8.1)
+    dotenv (3.1.2)
     dry-core (1.0.0)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
