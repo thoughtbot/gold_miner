@@ -6,12 +6,7 @@ class GoldMiner
       end
 
       def self.last_friday
-        date = Date.today
-        one_day_ago = (date - 1)
-        one_week_ago = date - 7
-        friday = one_day_ago.downto(one_week_ago).find { |date| date.friday? }
-
-        friday.to_s
+        Enumerator.produce(Date.today - 1, &:prev_day).find { |date| date.friday? }.to_s
       end
     end
 
