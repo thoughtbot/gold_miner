@@ -64,11 +64,11 @@ GEM
     net-http (0.4.1)
       uri
     parallel (1.25.1)
-    parser (3.3.3.0)
+    parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
     public_suffix (5.0.5)
-    racc (1.8.0)
+    racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
     regexp_parser (2.9.2)
@@ -120,7 +120,7 @@ GEM
       faraday-multipart
       gli
       hashie
-    standard (1.39.0)
+    standard (1.39.2)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
       rubocop (~> 1.64.0)
