@@ -30,7 +30,8 @@ class GoldMiner
 
       def summarize(gold_nugget)
         summary = ask_openai <<~PROMPT
-          Summarize the following markdown message without removing the author's blog link. Return the summary as markdown.
+          Summarize the following markdown message without removing the author's blog link.
+          Keep code examples and links, if any. Return the summary as markdown.
 
           Message:
           #{gold_nugget.as_conversation}
@@ -48,7 +49,7 @@ class GoldMiner
       def ask_openai(prompt)
         response = @openai_client.chat(
           parameters: {
-            model: "gpt-3.5-turbo",
+            model: "gpt-4o-mini",
             messages: [{role: "user", content: prompt.strip}],
             temperature: 0
           }
