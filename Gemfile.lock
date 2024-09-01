@@ -15,8 +15,8 @@ GEM
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    async (2.14.2)
-      console (~> 1.25, >= 1.25.2)
+    async (2.16.1)
+      console (~> 1.26)
       fiber-annotation
       io-event (~> 1.6, >= 1.6.5)
     bigdecimal (3.1.8)
@@ -52,7 +52,7 @@ GEM
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
-    fiber-storage (0.1.2)
+    fiber-storage (1.0.0)
     gli (2.21.5)
     hashdiff (1.1.0)
     hashie (5.0.0)
