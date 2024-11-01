@@ -7,7 +7,7 @@ PATH
       dry-monads (~> 1.6)
       ruby-openai (~> 5.0)
       slack-ruby-client (~> 2.x)
-      zeitwerk (~> 2.6.6)
+      zeitwerk (>= 2.6.6, < 2.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -141,7 +141,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    zeitwerk (2.6.17)
+    zeitwerk (2.7.1)
 
 PLATFORMS
   ruby
