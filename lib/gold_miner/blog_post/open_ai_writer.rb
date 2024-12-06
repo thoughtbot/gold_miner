@@ -55,12 +55,9 @@ class GoldMiner
           }
         )
 
-        if !response["error"].nil?
-          warn "[WARNING] OpenAI error: #{response["error"]["message"]}"
-          return
-        end
-
         response.dig("choices", 0, "message", "content").strip
+      rescue Faraday::Error => e
+        warn "[WARNING] OpenAI error: #{e.response.dig(:body, "error", "message")}"
       rescue SocketError
         nil
       end

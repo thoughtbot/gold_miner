@@ -285,7 +285,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   def stub_open_ai_request(token:, prompt:, response_body:, response_status:)
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .with(
-        body: %({"model":"gpt-4o-mini","messages":[{"role":"user","content":#{prompt.strip.dump}}],"temperature":0}),
+        body: %({"model":"gpt-4o","messages":[{"role":"user","content":#{prompt.strip.dump}}],"temperature":0}),
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
