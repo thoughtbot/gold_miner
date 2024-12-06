@@ -49,7 +49,7 @@ class GoldMiner
       def ask_openai(prompt)
         response = @openai_client.chat(
           parameters: {
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             messages: [{role: "user", content: prompt.strip}],
             temperature: 0
           }
