@@ -109,7 +109,7 @@ available for User Tokens.
 Now you have your personal app installed to the workspace and with Bot and User
 Tokens generated.
 
-Go back to you App settings page, click "Add features and functionality >
+Go back to your App settings page, click "Add features and functionality >
 Permissions", then copy the "User OAuth Token" and set it to `SLACK_API_TOKEN`
 in your `.env` file.
 
