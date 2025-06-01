@@ -62,8 +62,8 @@ GEM
     hashdiff (1.1.2)
     hashie (5.0.0)
     io-event (1.10.0)
-    json (2.11.3)
-    language_server-protocol (3.17.0.4)
+    json (2.12.2)
+    language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
     metrics (0.12.2)
@@ -95,7 +95,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.1)
-    rubocop (1.75.4)
+    rubocop (1.75.8)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -131,10 +131,10 @@ GEM
       gli
       hashie
       logger
-    standard (1.49.0)
+    standard (1.50.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
-      rubocop (~> 1.75.2)
+      rubocop (~> 1.75.5)
       standard-custom (~> 1.0.0)
       standard-performance (~> 1.8)
     standard-custom (1.0.2)
@@ -163,7 +163,7 @@ DEPENDENCIES
   rake (~> 13.2)
   rspec (~> 3.13)
   simplecov
-  standard (~> 1.49)
+  standard (~> 1.50)
   timecop
   webmock
 
