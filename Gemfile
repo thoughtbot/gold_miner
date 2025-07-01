@@ -5,7 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in gold-miner.gemspec
 gemspec
 
-gem "rake", "~> 13.2"
+gem "rake", "~> 13.3"
 gem "standard", "~> 1.50"
 
 group :test do
