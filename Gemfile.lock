@@ -42,16 +42,16 @@ GEM
       dry-core (~> 1.1)
       zeitwerk (~> 2.6)
     event_stream_parser (1.0.0)
-    faraday (2.12.2)
+    faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-mashify (0.1.1)
+    faraday-mashify (1.0.0)
       faraday (~> 2.0)
       hashie
-    faraday-multipart (1.1.0)
+    faraday-multipart (1.1.1)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.0)
+    faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
@@ -70,7 +70,7 @@ GEM
     multipart-post (2.4.1)
     net-http (0.6.0)
       uri
-    ostruct (0.6.1)
+    ostruct (0.6.2)
     parallel (1.27.0)
     parser (3.3.8.0)
       ast (~> 2.4.1)
@@ -124,7 +124,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    slack-ruby-client (2.5.2)
+    slack-ruby-client (2.6.0)
       faraday (>= 2.0)
       faraday-mashify
       faraday-multipart
