@@ -4,6 +4,9 @@ aji:
 csara:
   link: https://thoughtbot.com/blog/authors/sara-jackson
 
+chad:
+  link: https://thoughtbot.com/blog/authors/chad-pytel
+
 dimiter:
   link: https://thoughtbot.com/blog/authors/dimiter-petrov
 
@@ -13,11 +16,17 @@ elisa:
 fer:
   link: https://github.com/ferperales
 
+jimmy:
+  link: https://thoughtbot.com/blog/authors/jimmy-thigpen
+
 jeanine:
   link: https://thoughtbot.com/blog/authors/jeanine-soterwood
 
 joelq:
   link: https://thoughtbot.com/blog/authors/joel-quenneville
+
+louis261:
+  link: https://thoughtbot.com/blog/authors/louis-antonopoulos
 
 matheus:
   link: https://thoughtbot.com/blog/authors/matheus-richard
