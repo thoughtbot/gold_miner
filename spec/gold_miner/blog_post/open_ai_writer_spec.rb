@@ -101,16 +101,20 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       it "uses the fallback writer to extract topics" do
         token = "invalid-token"
         gold_nugget = TestFactories.create_gold_nugget
+        error_message = "Some error"
         request = stub_open_ai_error(
           token: token,
           prompt: "Extract the 3 most relevant topics, if possible in one word, from this text as a single parseable JSON array: #{gold_nugget.content}",
-          response_error: "Some error"
+          response_error: error_message
         )
         fallback_topics = ["Ruby"]
         fallback_writer = stub_fallback_writer(extract_topics_from: fallback_topics)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer)
-        topics = writer.extract_topics_from(gold_nugget)
+        topics = nil
+        expect {
+          topics = writer.extract_topics_from(gold_nugget)
+        }.to output("[WARNING] OpenAI error: #{error_message}\n").to_stderr
 
         expect(topics).to eq(fallback_topics)
         expect(fallback_writer).to have_received(:extract_topics_from).with(gold_nugget)
@@ -189,7 +193,10 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         fallback_writer = stub_fallback_writer(give_title_to: fallback_title)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer)
-        title = writer.give_title_to(gold_nugget)
+        title = nil
+        expect {
+          title = writer.give_title_to(gold_nugget)
+        }.to output("[WARNING] OpenAI error: Some error\n").to_stderr
 
         expect(title).to eq(fallback_title)
         expect(fallback_writer).to have_received(:give_title_to).with(gold_nugget)
@@ -255,7 +262,10 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         fallback_writer = stub_fallback_writer(summarize: fallback_summary)
 
         writer = described_class.new(open_ai_api_token: token, fallback_writer: fallback_writer)
-        title = writer.summarize(gold_nugget)
+        title = nil
+        expect {
+          title = writer.summarize(gold_nugget)
+        }.to output("[WARNING] OpenAI error: Some error\n").to_stderr
 
         expect(title).to eq(fallback_summary)
         expect(fallback_writer).to have_received(:summarize).with(gold_nugget)
