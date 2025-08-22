@@ -16,7 +16,7 @@ class GoldMiner
       end
 
       def summarize(gold_nugget)
-        gold_nugget.content
+        gold_nugget.as_conversation
       end
     end
   end

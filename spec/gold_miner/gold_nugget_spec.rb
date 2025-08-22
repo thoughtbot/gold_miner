@@ -14,11 +14,7 @@ RSpec.describe GoldMiner::GoldNugget do
 
       conversation = gold_nugget.as_conversation
 
-      expect(conversation).to eq <<~MARKDOWN
-        [Matz][the-ruby-matz] says: TIL
-
-        [the-ruby-matz]: https://example.com/matz
-      MARKDOWN
+      expect(conversation).to eq "Matz says: TIL"
     end
   end
 end

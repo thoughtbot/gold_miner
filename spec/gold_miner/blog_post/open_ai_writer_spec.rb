@@ -213,7 +213,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       request = stub_open_ai_request(
         token: token,
         prompt:
-          "Summarize the following markdown message without removing the author's blog link.\nKeep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
+          "Summarize the following markdown message. Keep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
         response_status: 200,
         response_body: {
           "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_summary}}]
@@ -230,6 +230,30 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
       expect(request).to have_been_requested.once
     end
 
+    it "filters sensitive information before sending the request, but restores it in the response" do
+      token = "valid-token"
+      gold_nugget = TestFactories.create_gold_nugget(content: "You can email me at user@example.com. What's my email?")
+      open_ai_summary = "Your email is [EMAIL_1]."
+      request = stub_open_ai_request(
+        token: token,
+        prompt: nil,
+        body: a_string_including("You can email me at [EMAIL_1]"),
+        response_status: 200,
+        response_body: {
+          "choices" => [{"message" => {"role" => "assistant", "content" => open_ai_summary}}]
+        }
+      )
+      writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
+      summary = writer.summarize(gold_nugget)
+
+      expect(summary).to eq <<~SUMMARY.strip
+        Your email is user@example.com.
+
+        Source: #{gold_nugget.source}
+      SUMMARY
+      expect(request).to have_been_requested.once
+    end
+
     context "with an invalid token" do
       it "warns about the error" do
         token = "invalid-token"
@@ -238,7 +262,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         request = stub_open_ai_error(
           token: token,
           prompt:
-            "Summarize the following markdown message without removing the author's blog link.\nKeep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
+            "Summarize the following markdown message. Keep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
           response_error: open_ai_error
         )
         writer = described_class.new(open_ai_api_token: token, fallback_writer: stub_fallback_writer)
@@ -255,7 +279,7 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
         request = stub_open_ai_error(
           token: token,
           prompt:
-            "Summarize the following markdown message without removing the author's blog link.\nKeep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
+            "Summarize the following markdown message. Keep code examples and links, if any. Return the summary as markdown.\n\nMessage:\n#{gold_nugget.as_conversation}",
           response_error: "Some error"
         )
         fallback_summary = "[TODO]"
@@ -292,10 +316,11 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
     )
   end
 
-  def stub_open_ai_request(token:, prompt:, response_body:, response_status:)
+  def stub_open_ai_request(token:, prompt:, response_body:, response_status:, body: nil)
+    body ||= %({"model":"gpt-4o","messages":[#{developer_prompt.to_json},{"role":"user","content":#{prompt.strip.dump}}],"temperature":0})
     stub_request(:post, "https://api.openai.com/v1/chat/completions")
       .with(
-        body: %({"model":"gpt-4o","messages":[{"role":"user","content":#{prompt.strip.dump}}],"temperature":0}),
+        body:,
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
@@ -310,4 +335,6 @@ RSpec.describe GoldMiner::BlogPost::OpenAiWriter do
   def stub_fallback_writer(give_title_to: "[TODO TITLE]", summarize: "[TODO SUMMARY]", extract_topics_from: ["TODO", "TOPICS"])
     double("fallback writer", give_title_to: give_title_to, summarize: summarize, extract_topics_from: extract_topics_from)
   end
+
+  def developer_prompt = {role: "developer", content: described_class::DEVELOPER_PROMPT}
 end

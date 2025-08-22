@@ -42,13 +42,13 @@ RSpec.describe GoldMiner::BlogPost::SimpleWriter do
   end
 
   describe "#summarize" do
-    it "returns the given text" do
+    it "returns the conversation form of the gold nugget" do
       gold_nugget = TestFactories.create_gold_nugget(content: "message text")
       writer = described_class.new
 
       summary = writer.summarize(gold_nugget)
 
-      expect(summary).to eq(gold_nugget.content)
+      expect(summary).to eq(gold_nugget.as_conversation)
     end
   end
 end

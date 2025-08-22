@@ -61,7 +61,10 @@ class GoldMiner
 
     def highlight_from(gold_nugget)
       title_task = Async { @writer.give_title_to(gold_nugget) }
-      summary_task = Async { @writer.summarize(gold_nugget) }
+      summary_task = Async do
+        summary = @writer.summarize(gold_nugget)
+        add_author_link(summary, gold_nugget.author)
+      end
 
       <<~MARKDOWN
         ## #{title_task.wait}
@@ -97,6 +100,13 @@ class GoldMiner
         .uniq
         .sort
         .then { |authors| Helpers::Sentence.from(authors) }
+    end
+
+    def add_author_link(summary, author)
+      <<~MARKDOWN.chomp
+        #{summary.gsub(author.name, author.name_with_link_reference)}
+        #{author.reference_link}
+      MARKDOWN
     end
   end
 end

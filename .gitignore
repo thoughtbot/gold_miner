@@ -10,3 +10,6 @@
 # rspec failure tracking
 .rspec_status
 .env
+
+# top_secret NER model
+ner_model.dat

@@ -34,15 +34,18 @@ RSpec.describe GoldMiner::BlogPost do
 
           ## http://permalink-1.com
 
-          TIL 1
+          [John Doe][john.doe] says: TIL 1
+          [john.doe]: https://example.com/john.doe
 
           ## http://permalink-2.com
 
-          TIL 2
+          [Jane Smith][jane.smith] says: TIL 2
+          [jane.smith]: https://example.com/jane.smith
 
           ## http://permalink-3.com
 
-          Tip 1
+          [John Doe][john.doe] says: Tip 1
+          [john.doe]: https://example.com/john.doe
 
           ## Thanks
 
@@ -113,10 +116,12 @@ RSpec.describe GoldMiner::BlogPost do
         ## test
 
         test
+        [john.doe]: https://example.com/john.doe
 
         ## test
 
         test
+        [jane.smith]: https://example.com/jane.smith
 
         ## Thanks
 

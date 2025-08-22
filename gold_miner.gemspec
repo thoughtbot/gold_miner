@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dry-monads", "~> 1.6"
   spec.add_dependency "ruby-openai", "~> 7.0"
   spec.add_dependency "slack-ruby-client", "~> 2.x"
+  spec.add_dependency "top_secret", "~> 0.2.0"
   spec.add_dependency "zeitwerk", "~> 2.7"
 
   # For more information and examples about making a new gem, check out our

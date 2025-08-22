@@ -2,12 +2,6 @@
 
 class GoldMiner
   GoldNugget = Data.define(:content, :author, :source) do
-    def as_conversation
-      <<~MARKDOWN
-        #{author.name_with_link_reference} says: #{content}
-
-        #{author.reference_link}
-      MARKDOWN
-    end
+    def as_conversation = "#{author.name} says: #{content}"
   end
 end
