@@ -6,7 +6,7 @@ PATH
       dotenv (~> 2.8.0)
       dry-monads (~> 1.6)
       ruby-openai (~> 7.0)
-      slack-ruby-client (~> 2.x)
+      slack-ruby-client (>= 2, < 4)
       zeitwerk (~> 2.7)
 
 GEM
@@ -42,17 +42,17 @@ GEM
       dry-core (~> 1.1)
       zeitwerk (~> 2.6)
     event_stream_parser (1.0.0)
-    faraday (2.13.4)
+    faraday (2.14.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-mashify (1.0.0)
+    faraday-mashify (1.0.2)
       faraday (~> 2.0)
       hashie
-    faraday-multipart (1.1.1)
+    faraday-multipart (1.2.0)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.1)
-      net-http (>= 0.5.0)
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
@@ -60,16 +60,17 @@ GEM
     gli (2.22.2)
       ostruct
     hashdiff (1.2.1)
-    hashie (5.0.0)
+    hashie (5.1.0)
+      logger
     io-event (1.14.0)
-    json (2.16.0)
+    json (2.18.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
     metrics (0.15.0)
     multipart-post (2.4.1)
-    net-http (0.6.0)
-      uri
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.10.0)
@@ -124,7 +125,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    slack-ruby-client (2.7.0)
+    slack-ruby-client (3.1.0)
       faraday (>= 2.0.1)
       faraday-mashify
       faraday-multipart
@@ -148,7 +149,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
-    uri (1.0.4)
+    uri (1.1.1)
     webmock (3.26.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
