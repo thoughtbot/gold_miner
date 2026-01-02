@@ -5,7 +5,7 @@ PATH
       async (~> 2.6)
       dotenv (~> 2.8.0)
       dry-monads (~> 1.6)
-      ruby-openai (~> 7.0)
+      ruby-openai (>= 7, < 9)
       slack-ruby-client (~> 2.x)
       zeitwerk (~> 2.7)
 
@@ -113,7 +113,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
-    ruby-openai (7.4.0)
+    ruby-openai (8.3.0)
       event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
