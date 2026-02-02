@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "async", "~> 2.6"
-  spec.add_dependency "dotenv", "~> 2.8.0"
+  spec.add_dependency "dotenv", ">= 2.8", "< 3.3"
   spec.add_dependency "dry-monads", "~> 1.6"
   spec.add_dependency "ruby-openai", "~> 7.0"
   spec.add_dependency "slack-ruby-client", "~> 2.x"
