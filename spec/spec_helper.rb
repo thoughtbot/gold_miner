@@ -3,7 +3,7 @@
 require "simplecov"
 SimpleCov.start do
   enable_coverage :branch
-  add_filter "/spec"
+  skip "/spec"
 end
 
 require "gold_miner"
