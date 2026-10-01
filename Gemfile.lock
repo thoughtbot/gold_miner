@@ -118,7 +118,7 @@ GEM
       faraday (>= 1)
       faraday-multipart (>= 1)
     ruby-progressbar (1.13.0)
-    simplecov (1.1.1)
+    simplecov (1.2.0)
     slack-ruby-client (3.2.0)
       faraday (>= 2.0.1)
       faraday-mashify
