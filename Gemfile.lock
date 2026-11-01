@@ -41,25 +41,23 @@ GEM
       dry-core (~> 1.1)
       zeitwerk (~> 2.6)
     event_stream_parser (1.0.0)
-    faraday (2.14.3)
-      faraday-net_http (>= 2.0, < 3.5)
+    faraday (2.15.1)
+      faraday-net_http (>= 2.0, < 3.6)
       json
       logger
-    faraday-mashify (1.0.2)
+    faraday-mashify (1.0.3)
       faraday (~> 2.0)
       hashie
     faraday-multipart (1.2.0)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.4)
+    faraday-net_http (3.5.0)
       net-http (~> 0.5)
     fiber-annotation (0.2.0)
     fiber-local (1.1.0)
       fiber-storage
     fiber-storage (1.0.1)
-    gli (2.22.2)
-      ostruct
     hashdiff (1.2.1)
-    hashie (5.1.0)
+    hashie (5.2.0)
       logger
     io-event (1.14.3)
     json (2.21.2)
@@ -68,9 +66,11 @@ GEM
     logger (1.7.0)
     metrics (0.15.0)
     multipart-post (2.4.1)
-    net-http (0.9.1)
+    net-http (0.10.0)
+      net-protocol (>= 0.3.0)
       uri (>= 0.11.1)
-    ostruct (0.6.3)
+    net-protocol (0.4.0)
+      timeout
     parallel (1.28.0)
     parser (3.3.12.0)
       ast (~> 2.4.1)
@@ -119,11 +119,10 @@ GEM
       faraday-multipart (>= 1)
     ruby-progressbar (1.13.0)
     simplecov (1.2.0)
-    slack-ruby-client (3.2.0)
+    slack-ruby-client (3.3.0)
       faraday (>= 2.0.1)
       faraday-mashify
       faraday-multipart
-      gli
       hashie
       logger
     standard (1.56.0)
@@ -139,11 +138,12 @@ GEM
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.26.0)
     timecop (0.9.11)
+    timeout (0.6.1)
     traces (0.18.2)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
-    uri (1.1.1)
+    uri (1.1.2)
     webmock (3.26.4)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
